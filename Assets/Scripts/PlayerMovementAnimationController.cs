@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerMovementAnimationController : MonoBehaviour
@@ -6,6 +7,8 @@ public class PlayerMovementAnimationController : MonoBehaviour
     public float walkSpeed = 2f;
     public float runSpeed = 5f;
     public float rotationSpeed = 100f;
+
+    private DateTime idleStartTime = DateTime.MinValue;
 
     private void Awake()
     {
@@ -39,9 +42,20 @@ public class PlayerMovementAnimationController : MonoBehaviour
         bool isRunning = isMoving && Input.GetKey(KeyCode.LeftShift);
         bool isWalking = isMoving && !isRunning;
 
-        animator.SetBool("isWalking", isWalking);
-        animator.SetBool("isRunning", isRunning);
-        animator.SetBool("isIdle", !isMoving);
+        DateTime dateNow = DateTime.Now;
+        if (!isMoving && idleStartTime == DateTime.MinValue)
+        {
+            idleStartTime = DateTime.Now;
+        }
+        else if (isMoving)
+        {
+            idleStartTime = DateTime.MinValue;
+        }
+        TimeSpan difference = dateNow.Subtract(idleStartTime);
+
+        animator.SetBool("IsWalking", isWalking);
+        animator.SetBool("IsRunning", isRunning);
+
 
         float currentSpeed = 0f;
         if (isWalking)
@@ -58,11 +72,11 @@ public class PlayerMovementAnimationController : MonoBehaviour
         // otherwise, apply movement here.
         if (isWalking)
         {
-            transform.Translate(moveDirection * walkSpeed * Time.deltaTime, Space.World);
+            //transform.Translate(moveDirection * walkSpeed * Time.deltaTime, Space.World);
         }
         if (isRunning)
         {
-            transform.Translate(moveDirection * runSpeed * Time.deltaTime, Space.World);
+            //transform.Translate(moveDirection * runSpeed * Time.deltaTime, Space.World);
         }
 
         // character rotation
@@ -72,12 +86,27 @@ public class PlayerMovementAnimationController : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
+        bool isPickUp = Input.GetKeyDown(KeyCode.E);
+        bool isUse = Input.GetKeyDown(KeyCode.F);
         // Action Trigger (Pick Up)
-        if (Input.GetKeyDown(KeyCode.E))
+        if (isPickUp)
         {
             animator.SetTrigger("TriggerPickUp");
             // TODO: add actual pickup game logic here.
 
         }
+        if (isUse)
+        {
+            animator.SetTrigger("TriggerUse");
+        }
+        bool isCrouching = Input.GetKey(KeyCode.C);
+        animator.SetBool("IsCrouching", isCrouching);
+
+
+        bool isAction = (isPickUp || isCrouching);
+
+        bool isIdle = !isMoving && !isAction && (difference.TotalSeconds > 2);
+        animator.SetBool("IsIdle", isIdle);
     }
+
 }

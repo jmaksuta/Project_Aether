@@ -29,7 +29,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8455621493352400560}
   - {fileID: 1393205835170103368}
   - {fileID: 6474188742395705775}
   - {fileID: 1502682199422747402}
@@ -109,6 +108,7 @@ GameObject:
   - component: {fileID: 4700599725167637640}
   - component: {fileID: 8449994709988887689}
   - component: {fileID: 7397404898984166051}
+  - component: {fileID: 271465517862208203}
   m_Layer: 0
   m_Name: PlayerCharacter_Modular
   m_TagString: Untagged
@@ -129,6 +129,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 8455621493352400560}
   - {fileID: 4366770687287793092}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -172,6 +173,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 500
+--- !u!114 &271465517862208203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5811505661382451635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29304074356acf549874ee12399118cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 2
+  runSpeed: 5
+  rotationSpeed: 100
 --- !u!1 &6251390619477914575
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +256,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 4366770687287793092}
+    m_TransformParent: {fileID: 4700599725167637640}
     m_Modifications:
     - target: {fileID: 2404016593521702087, guid: 5a8774bf09f1b574c9ffba8fcfbbd45c, type: 3}
       propertyPath: m_LocalPosition.x
@@ -286,6 +302,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Male_Skeleton_Base.v1
       objectReference: {fileID: 0}
+    - target: {fileID: 8628022286122528445, guid: 5a8774bf09f1b574c9ffba8fcfbbd45c, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: bfeab63e15bda8046a9bc0a565a6469d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
