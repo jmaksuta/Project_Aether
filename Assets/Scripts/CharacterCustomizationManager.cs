@@ -28,6 +28,11 @@ public class CharacterCustomizationManager : MonoBehaviour
 
     private void Awake()
     {
+        initialize();
+    }
+
+    private void initialize()
+    {
         characterAnimator = GetComponentInChildren<Animator>(); // Finds the animator on the base skeleton
         if (characterMeshesParent == null)
         {
@@ -37,8 +42,12 @@ public class CharacterCustomizationManager : MonoBehaviour
                 // if styill null, create one for organization
                 characterMeshesParent = new GameObject("CharacterMeshes").transform;
                 characterMeshesParent.SetParent(this.transform);
-                characterMeshesParent.localPosition = Vector3.zero;
-                characterMeshesParent.localRotation = Quaternion.identity;
+                characterMeshesParent.position = this.transform.position;
+                characterMeshesParent.rotation = this.transform.rotation;
+                characterMeshesParent.localPosition = this.transform.localPosition;
+                characterMeshesParent.localRotation = this.transform.localRotation;
+                //characterMeshesParent.localPosition = Vector3.zero;
+                //characterMeshesParent.localRotation = Quaternion.identity;
             }
         }
 
@@ -222,7 +231,7 @@ public class CharacterCustomizationManager : MonoBehaviour
         GameObject currentObj = currentPart;
         int currentIndex = availableParts.FindIndex(go =>
         {
-            return go != null && go.name == currentObj.name.Replace("(Clone)", "");
+            return go != null && go.name == currentObj.name.Replace("(Clone)", "").Replace("(Core)", "");
 
         });
 
@@ -234,7 +243,7 @@ public class CharacterCustomizationManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        initialize();
     }
 
     // Update is called once per frame

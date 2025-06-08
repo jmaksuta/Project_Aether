@@ -202,8 +202,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1637968240}
-        m_TargetAssemblyTypeName: CharacterCustomizationManager, Assembly-CSharp
+      - m_Target: {fileID: 880211996}
+        m_TargetAssemblyTypeName: CharacterCustomizationManager, Project_Aether.Core
         m_MethodName: SetNextTorso
         m_Mode: 1
         m_Arguments:
@@ -456,8 +456,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1637968240}
-        m_TargetAssemblyTypeName: CharacterCustomizationManager, Assembly-CSharp
+      - m_Target: {fileID: 880211996}
+        m_TargetAssemblyTypeName: CharacterCustomizationManager, Project_Aether.Core
         m_MethodName: SetNextHead
         m_Mode: 1
         m_Arguments:
@@ -687,6 +687,90 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1001 &690466815
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700599725167637640, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5811505661382451635, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: m_Name
+      value: PlayerCharacter_Modular
+      objectReference: {fileID: 0}
+    - target: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: currentFeet
+      value: 
+      objectReference: {fileID: 8445035291351492751, guid: 4e3cebb42b945d44d8435a48fffd6442, type: 3}
+    - target: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: currentHead
+      value: 
+      objectReference: {fileID: 7994157281249730566, guid: 7af6d5e82bd40ba4390ea890f98d46d2, type: 3}
+    - target: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: currentLegs
+      value: 
+      objectReference: {fileID: 3878168419427567251, guid: 856f0de4fc2125b47a4809409555a024, type: 3}
+    - target: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+      propertyPath: currentTorso
+      value: 
+      objectReference: {fileID: 7279619227930082842, guid: bd625a8c47cc67e41ac64bc84feda85a, type: 3}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+--- !u!114 &880211996 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+  m_PrefabInstance: {fileID: 690466815}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b85c372784897c74b8c68542b30dffea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1292613428
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,8 +1478,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1637968240}
-        m_TargetAssemblyTypeName: CharacterCustomizationManager, Assembly-CSharp
+      - m_Target: {fileID: 880211996}
+        m_TargetAssemblyTypeName: CharacterCustomizationManager, Project_Aether.Core
         m_MethodName: SetNextFeet
         m_Mode: 1
         m_Arguments:
@@ -1444,74 +1528,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1627540504}
   m_CullTransparentMesh: 1
---- !u!1001 &1637968239
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2117255500171232112, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_Name
-      value: PlayerCharacter_Modular
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2900017948772157428, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
---- !u!114 &1637968240 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6490872311120255590, guid: 942c70eccc11eb24c977379697fe1f9f, type: 3}
-  m_PrefabInstance: {fileID: 1637968239}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b85c372784897c74b8c68542b30dffea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1684861155
 GameObject:
   m_ObjectHideFlags: 0
@@ -1988,8 +2004,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1637968240}
-        m_TargetAssemblyTypeName: CharacterCustomizationManager, Assembly-CSharp
+      - m_Target: {fileID: 8449994709988887689, guid: c168a591eaa11d44e8e2d50c86a54c16, type: 3}
+        m_TargetAssemblyTypeName: CharacterCustomizationManager, Project_Aether.Core
         m_MethodName: SetNextLegs
         m_Mode: 1
         m_Arguments:
@@ -2400,7 +2416,7 @@ SceneRoots:
   - {fileID: 1808330618}
   - {fileID: 31986282}
   - {fileID: 1304424003}
-  - {fileID: 1637968239}
   - {fileID: 673252543}
   - {fileID: 1971888119}
   - {fileID: 1910554697}
+  - {fileID: 690466815}
