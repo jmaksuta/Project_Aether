@@ -6,7 +6,7 @@ public class PlayerMovementAnimationController : MonoBehaviour
 {
     public Animator animator;
     private CharacterController characterController;
-    public CharacterCustomizationManager characterCustomizationManager;
+    //public CharacterCustomizationManager characterCustomizationManager;
 
     public float walkSpeed = 2f;
     public float runSpeed = 5f;
@@ -174,10 +174,10 @@ public class PlayerMovementAnimationController : MonoBehaviour
         {
             animator.SetBool(animationVariable, value);
         }
-        if (characterCustomizationManager != null)
-        {
-            characterCustomizationManager.SetAnimationValue(animationVariable, value);
-        }
+        //if (characterCustomizationManager != null)
+        //{
+        //    characterCustomizationManager.SetAnimationValue(animationVariable, value);
+        //}
     }
 
     private void SetAnimationValue(String animationVariable, float value)
@@ -186,10 +186,10 @@ public class PlayerMovementAnimationController : MonoBehaviour
         {
             animator.SetFloat(animationVariable, value);
         }
-        if (characterCustomizationManager != null)
-        {
-            characterCustomizationManager.SetAnimationValue(animationVariable, value);
-        }
+        //if (characterCustomizationManager != null)
+        //{
+        //    characterCustomizationManager.SetAnimationValue(animationVariable, value);
+        //}
     }
 
     private void SetAnimationValue(String animationVariable)
@@ -198,9 +198,9 @@ public class PlayerMovementAnimationController : MonoBehaviour
         {
             animator.SetTrigger(animationVariable);
         }
-        if (characterCustomizationManager != null)
-        {
-            characterCustomizationManager.SetAnimationValue(animationVariable);
-        }
+        //if (characterCustomizationManager != null)
+        //{
+        //    characterCustomizationManager.SetAnimationValue(animationVariable);
+        //}
     }
 }

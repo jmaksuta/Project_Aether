@@ -368,7 +368,7 @@ public class CharacterCustomizationManager : MonoBehaviour
                     Debug.LogWarning("Could not find Hips bone for " + newPartPrefab.name + ". Automatic bone assignment might fail for this part.");
                 }
                 if (originalSkinnedMeshRenderer != null)
-                {
+                { 
                     newRenderer.bones = originalSkinnedMeshRenderer.bones;
                 }
                 else
