@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4112750115948821442
+--- !u!1001 &6797059107199647252
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -52,10 +52,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Male_Legs_Base.v2
       objectReference: {fileID: 0}
-    - target: {fileID: 5866666021909216657, guid: 430c0af693e8c304996da26e7fcf5df5, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: bfeab63e15bda8046a9bc0a565a6469d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
