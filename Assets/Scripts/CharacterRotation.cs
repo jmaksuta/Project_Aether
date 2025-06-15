@@ -13,10 +13,11 @@ public class CharacterRotation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            float mouseX = Input.GetAxis("Mouse X");
-            transform.Rotate(Vector3.up, -mouseX * rotationSpeed * Time.deltaTime, Space.World);
-        }
+        // TODO: Change to use the new Input System when available
+        //if (Input.GetMouseButton(0))
+        //{
+        //    float mouseX = Input.GetAxis("Mouse X");
+        //    transform.Rotate(Vector3.up, -mouseX * rotationSpeed * Time.deltaTime, Space.World);
+        //}
     }
 }
