@@ -1,0 +1,7 @@
+FEMALE 
+
+Generate a mid-poly 3D humanoid model in a T-pose (or A-pose) for modular game character customization. It should have an average, athletic build, be gender-specific female. The aesthetic is "attractive stylized realism", prioritizing clean, well-defined forms. Use a smooth, neutral grey material or simple skin tone shader. Facial features should be generic, neutral, and symmetrical. Crucially, the polygonal topology must be clean, quad-based, optimized for game-ready performance, and ensure perfect bilateral symmetry with clear edge loops for rigging and animation. Scale should be proportionate to standard human dimensions (approx. 1.8m tall)
+
+MALE
+
+Generate a mid-poly 3D humanoid model in a T-pose (or A-pose) for modular game character customization. It should have an average, athletic build, be gender-specific male. The aesthetic is "attractive stylized realism", prioritizing clean, well-defined forms. Use a smooth, neutral grey material or simple skin tone shader. Facial features should be generic, neutral, and symmetrical. Crucially, the polygonal topology must be clean, quad-based, optimized for game-ready performance, and ensure perfect bilateral symmetry with clear edge loops for rigging and animation. Scale should be proportionate to standard human dimensions (approx. 1.8m tall)
