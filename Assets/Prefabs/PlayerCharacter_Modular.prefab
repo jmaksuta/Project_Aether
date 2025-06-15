@@ -152,8 +152,7 @@ MonoBehaviour:
   currentFeet: {fileID: 0}
   availableHeads:
   - {fileID: 4415432085042090871, guid: 7af6d5e82bd40ba4390ea890f98d46d2, type: 3}
-  - {fileID: 5723927721268034653, guid: b1dfbdbc21e60a9458707b109eba41c3, type: 3}
-  - {fileID: 6285469230605259489, guid: 0b0a11be761bff04283107284592d722, type: 3}
+  - {fileID: 1151410777611198498, guid: 0b0a11be761bff04283107284592d722, type: 3}
   availableTorsos:
   - {fileID: 8690858158933962305, guid: bd625a8c47cc67e41ac64bc84feda85a, type: 3}
   availableLegs:
