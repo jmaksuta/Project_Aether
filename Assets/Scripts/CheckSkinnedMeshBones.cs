@@ -4,8 +4,7 @@ public class CheckSkinnedMeshBones : MonoBehaviour
 {
     private Transform[] _bones;
 
-    [SerializeField]
-    [ReadOnly]
+    [SerializeField] //[ReadOnly]
     public Transform[] Bones {
         get
         {

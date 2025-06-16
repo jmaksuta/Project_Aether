@@ -1035,7 +1035,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 214942309}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1238,6 +1238,7 @@ GameObject:
   - component: {fileID: 1699085627}
   - component: {fileID: 1699085626}
   - component: {fileID: 1699085628}
+  - component: {fileID: 1699085629}
   m_Layer: 5
   m_Name: Joystick_Background
   m_TagString: Untagged
@@ -1310,7 +1311,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1699085624}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 718aecbf617c68047aad25feb8b4fcb9, type: 3}
   m_Name: 
@@ -1319,6 +1320,23 @@ MonoBehaviour:
   joystickHandle: {fileID: 1776061544}
   joystickRange: 100
   deadZoneRadius: 0.1
+--- !u!114 &1699085629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1699085624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56c7f98027d91be41978d0fff7507c40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  joystickHandle: {fileID: 1776061544}
+  joystickBackground: {fileID: 1699085624}
+  movementRange: 100
+  deadZone: 0.1
+  m_ControlPath: <Gamepad>/leftStick
 --- !u!1 &1776061543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1531,6 +1549,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUD
       objectReference: {fileID: 0}
+    - target: {fileID: 8294520381613613568, guid: 3b71adb20424cde499165080c9011057, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 214942309}
     - target: {fileID: 8294520381613613568, guid: 3b71adb20424cde499165080c9011057, type: 3}
       propertyPath: m_RenderMode
       value: 1

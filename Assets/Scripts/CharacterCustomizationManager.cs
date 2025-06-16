@@ -1,14 +1,7 @@
 using Assets.Scripts;
-using NUnit.Framework;
 using System.Collections.Generic;
-using Unity.Android.Gradle;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Rendering;
-using static UnityEditor.PlayerSettings;
-using UnityEngine.TextCore.Text;
 using System;
-using UnityEditor.Animations;
 
 public class CharacterCustomizationManager : MonoBehaviour
 {
