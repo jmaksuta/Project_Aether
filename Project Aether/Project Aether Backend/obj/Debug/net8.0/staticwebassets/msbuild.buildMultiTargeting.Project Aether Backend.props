@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Project Aether Backend.props" />
+</Project>
