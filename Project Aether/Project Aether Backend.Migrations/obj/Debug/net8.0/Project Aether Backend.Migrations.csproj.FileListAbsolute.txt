@@ -170,9 +170,9 @@ F:\Backup\source\repos\Project Aether\Project Aether Backend.Migrations\obj\Debu
 F:\Backup\source\repos\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.pdb
 F:\Backup\source\repos\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.genruntimeconfig.cache
 F:\Backup\source\repos\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\ref\Project Aether Backend.Migrations.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\appsettings.Development.json
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\Project Aether Backend.deps.json
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\Project Aether Backend.runtimeconfig.json
+F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\appsettings.Development.json
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\Project Aether Backend.staticwebassets.endpoints.json
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\Project Aether Backend.exe
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\Project Aether Backend.Migrations.exe

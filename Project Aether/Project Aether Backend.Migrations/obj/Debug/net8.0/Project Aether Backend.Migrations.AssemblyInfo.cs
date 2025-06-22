@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Project Aether Backend.Migrations")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ef3709e2f04a879ee0880674cf6c0e3f825f9f0a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+fedcefbb8d2f7cd36f0461ac00cc96b8528ad20e")]
 [assembly: System.Reflection.AssemblyProductAttribute("Project Aether Backend.Migrations")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Project Aether Backend.Migrations")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

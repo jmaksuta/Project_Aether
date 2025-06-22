@@ -116,6 +116,7 @@ namespace Project_Aether_Backend.Hubs
                 Context.Abort(); // Disconnects the anonymous user
                 throw new HubException("User must be authenticated to connect to this hub.");
             }
+            Console.WriteLine($"User with name: {this.UserName} is authenticated. User ID: {this.UserId}, Connection ID: {this.ConnectionId}");
         }
 
         private async void UpdateOrInsertConnection()
