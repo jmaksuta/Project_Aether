@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.OpenApi.Writers;
 using Project_Aether_Backend.Data;
+using Project_Aether_Backend.Hubs;
 using Project_Aether_Backend.Models;
 using System.Reflection;
 using System.Text;
@@ -66,6 +67,9 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(); // Add authorization policies
 
 builder.Services.AddControllers();
+
+// In the services section (before builder.Build()):
+builder.Services.AddSignalR();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -129,6 +133,9 @@ else
 // Use authentication and authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
+
+// In the middleware section (before app.MapControllers()):
+app.MapHub<ChatHub>("/chathub"); // Map your hub to a URL path
 
 app.MapControllers();
 

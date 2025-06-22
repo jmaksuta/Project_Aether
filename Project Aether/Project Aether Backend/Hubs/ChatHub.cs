@@ -68,7 +68,7 @@ namespace Project_Aether_Backend.Hubs
         // Example: Sending a message to a specific user
         public async Task SendPrivateMessage(string recipientUsername, string message)
         {
-            var senderUsername = Context.User.Identity.Name;
+            var senderUsername = this.UserName;
 
             // Find the connection ID of the recipient
             // This is a simplification; in a real app, you'd likely map User ID to Connection ID.
@@ -81,67 +81,41 @@ namespace Project_Aether_Backend.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            //Console.WriteLine($"User {Context.User.Identity.Name} connected with ID:{Context.ConnectionId}.");
-            //// optionally, add user to "online" list via Redis
-            //await base.OnConnectedAsync();
-            //-----------------------------------------------------------------------
-            //string connectionId = Context.ConnectionId;
-            //string? userName = Context.User?.Identity?.Name;
-            //string? userId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            try
+            {
+                // Ensure the user is authenticated and we have their UserId
+                EnsureUserAuthenticated();
 
-            // Ensure the user is authenticated and we have their UserId
+                //--- Enforce One-User-One-Connection Logic ---
+                UpdateOrInsertConnection();
+
+                Console.WriteLine($"User '{this.UserName}' (ID: {this.UserId}) connected with new ConnectionId: {this.ConnectionId}. Added to DB.");
+
+                // --- Optional: Broadcast new online user to all clients ---
+                await BroadcaseOnlineUsersToAllClients();
+                // -----------------------------------------------------------
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+                await base.OnConnectedAsync();
+            }
+        }
+
+        private void EnsureUserAuthenticated()
+        {
             if (string.IsNullOrEmpty(this.UserId))
             {
                 Console.WriteLine($"Anonymous user connected with ID: {this.ConnectionId}. Not tracking in OnlineConnections.");
                 // For a game, you might disconnect anonymous users immediately.
                 Context.Abort(); // Disconnects the anonymous user
-                await base.OnConnectedAsync();
-                return;
+                throw new HubException("User must be authenticated to connect to this hub.");
             }
-
-            // ---- BEGIN OLD CODE ----
-            // Create a new record for the online connection
-            //var onlineConnection = new OnlineConnection
-            //{
-            //    ConnectionId = connectionId,
-            //    UserId = userId, // Store the Application User.Id
-            //    UserName = userName, // Store the username (e.g., email) for convenience
-            //    ConnectedAt = DateTimeOffset.UtcNow,
-            //    LastActivity = DateTimeOffset.UtcNow
-            //};
-            //// Add to DB
-            //_dbContext.OnlineConnections.Add(onlineConnection);
-            //await _dbContext.SaveChangesAsync();
-
-            //Console.WriteLine($"User '{userName}' (ID: {userId}) connected with ConnectionId: {connectionId}. Added to DB.");
-
-            //// --- Optional: Broadcast new online user to all clients ---
-            //// Fetch the current list of distinct online usernames from the DB
-            //var currentlyOnlineUserNames = await _dbContext.OnlineConnections
-            //    .Where(oc => oc.UserName != null) // Ensure username is not null
-            //    .Select(oc => oc.UserName)
-            //    .Distinct()
-            //    .ToListAsync();
-            //// Send update to all clients
-            //await Clients.All.SendAsync("UserStatusUpdate", currentlyOnlineUserNames);
-            //// Or a more specific message like "UserConnected", username
-            //// -----------------------------------------------------------
-            //await base.OnConnectedAsync();
-
-            // ---- END OLD CODE ----
-
-            // //--- Enforce One-User-One-Connection Logic ---
-            UpdateOrInsertConnection();
-            
-            Console.WriteLine($"User '{this.UserName}' (ID: {this.UserId}) connected with new ConnectionId: {this.ConnectionId}. Added to DB.");
-
-            // --- Optional: Broadcast new online user to all clients ---
-            await BroadcaseOnlineUsersToAllClients();
-            // -----------------------------------------------------------
-
-            await base.OnConnectedAsync();
-
-            // ---- END OLD CODE ----
         }
 
         private async void UpdateOrInsertConnection()
@@ -152,7 +126,7 @@ namespace Project_Aether_Backend.Hubs
             if (existingConnection != null)
             {
                 await DisconnectExisting(existingConnection);
-                await UpdateExistingRecord(existingConnection);                
+                await UpdateExistingRecord(existingConnection);
             }
             else
             {
@@ -290,5 +264,35 @@ namespace Project_Aether_Backend.Hubs
                 Console.WriteLine($"Disconnected ConnectionId {connectionId} not found in DB (might have been removed already or never properly added).");
             }
         }
+
+        public async Task GetCurrentOnlineUsers()
+        {
+            var onlineUserNames = await _dbContext.OnlineConnections
+                .Where(oc => oc.User != null)
+                .Select(oc => oc.UserName)
+                .Distinct()
+                .ToListAsync();
+
+            await Clients.Caller.SendAsync("ReceiveCurrentOnlineUsers", onlineUserNames);
+        }
+
+        // Example: Sending a message only to a specific online user
+        public async Task SendPrivateMessage2(string targetUserName, string message)
+        {
+            // Find all connection IDs for the target user from the database
+            var targetUserConnectionIds = await _dbContext.OnlineConnections
+                .Where(oc => oc.UserName == targetUserName)
+                .Select(oc => oc.ConnectionId).ToListAsync();
+            if (targetUserConnectionIds.Any())
+            {
+                await Clients.Clients(targetUserConnectionIds).SendAsync("ReceivePrivateMessage", Context.User?.Identity?.Name, message);
+            }
+            else
+            {
+                // Handle case where target user is not found or not online
+                await Clients.Caller.SendAsync("ErrorMessage", $"User '{targetUserName}' is not currently online.");
+            }
+        }
+
     }
 }
