@@ -252,6 +252,43 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("InventoryItems");
                 });
 
+            modelBuilder.Entity("Project_Aether_Backend.Models.OnlineConnection", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("ConnectedAt")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("ConnectionId")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<DateTimeOffset>("LastActivity")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("OnlineConnections");
+                });
+
             modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
                 {
                     b.Property<int>("Id")
@@ -348,6 +385,17 @@ namespace Project_Aether_Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("PlayerProfile");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.OnlineConnection", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", "User")
+                        .WithOne()
+                        .HasForeignKey("Project_Aether_Backend.Models.OnlineConnection", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>

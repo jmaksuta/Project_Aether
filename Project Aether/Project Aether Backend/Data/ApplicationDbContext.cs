@@ -14,6 +14,8 @@ namespace Project_Aether_Backend.Data
         public DbSet<PlayerProfile> PlayerProfiles { get; set; }
         public DbSet<InventoryItem> InventoryItems { get; set; }
 
+        public DbSet<OnlineConnection> OnlineConnections { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -28,6 +30,11 @@ namespace Project_Aether_Backend.Data
                 .HasOne(i => i.PlayerProfile)
                 .WithMany(p => p.Inventory)
                 .HasForeignKey(i => i.PlayerProfileId);
+
+            builder.Entity<OnlineConnection>()
+                .HasOne(oc => oc.User)
+                .WithOne()
+                .HasForeignKey<OnlineConnection>(oc => oc.UserId);
         }
     }
 }
