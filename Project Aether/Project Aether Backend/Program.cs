@@ -68,9 +68,6 @@ builder.Services.AddAuthorization(); // Add authorization policies
 
 builder.Services.AddControllers();
 
-// In the services section (before builder.Build()):
-builder.Services.AddSignalR();
-
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 
@@ -110,6 +107,8 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 
+// In the services section (before builder.Build()):
+builder.Services.AddSignalR();
 
 // TODO: this was generated from the stock example, but we don't need it for now.
 //builder.Services.ConfigureHttpJsonOptions(options =>
