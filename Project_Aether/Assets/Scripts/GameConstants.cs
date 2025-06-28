@@ -15,6 +15,19 @@ public static class GameConstants
     public const bool IsDedicatedServer = false;
 #endif
 
+    public const string BOOTSTRAP_SCENE_NAME = "00_BootstrapScene";
+    public const string PERSISTENT_SCENE_NAME = "01_PersistentScene";
+    public const string FOREST_ZONE_SCENE_NAME = "02_ForestZone";
+    public const string DUNGEON_ZONE_SCENE_NAME = "03_DungeonZone";
+
+    // Default connection port for Netcode's Unity Transport for direct connections
+    public const string GAME_SERVER_IP_ADDRESS = "192.168.1.21"; // Ensure this matches your dedicated server's open port
+    public const ushort GAME_SERVER_PORT = 7777; // Ensure this matches your dedicated server's open port
+    
+    public const string FALLBACK_LOCAL_IP_ADDRESS = "127.0.0.1"; // For local testing of direct connect
+    public const ushort FALLBACK_CONNECTION_PORT = 7777;
+
+
     // Other shared constants
     public const float PlayerSpeed = 5.0f;
 
