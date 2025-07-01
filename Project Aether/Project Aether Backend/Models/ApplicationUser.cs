@@ -6,5 +6,6 @@ namespace Project_Aether_Backend.Models
     {
         // Add custom fields for your user here.
         public DateTime DateRegistered { get; set; }
+        public PlayerProfile Player { get; set; }
     }
 }

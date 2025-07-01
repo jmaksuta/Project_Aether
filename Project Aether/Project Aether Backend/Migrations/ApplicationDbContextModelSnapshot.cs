@@ -168,7 +168,9 @@ namespace Project_Aether_Backend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateRegistered")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -223,7 +225,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Project_Aether_Backend.Models.InventoryItem", b =>
+            modelBuilder.Entity("Project_Aether_Backend.Models.GameObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,25 +233,52 @@ namespace Project_Aether_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ItemId")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ItemType")
+                    b.Property<int>("GameObjectType")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("ObjectType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("PlayerProfileId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlayerProfileId");
+                    b.ToTable("GameObjects");
 
-                    b.ToTable("InventoryItems");
+                    b.HasDiscriminator<int>("GameObjectType").HasValue(0);
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.Inventory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Inventories");
                 });
 
             modelBuilder.Entity("Project_Aether_Backend.Models.OnlineConnection", b =>
@@ -297,21 +326,10 @@ namespace Project_Aether_Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("DisplayName")
+                    b.Property<string>("PlayerName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<long>("Experience")
-                        .HasColumnType("bigint");
-
-                    b.Property<int>("Health")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Mana")
-                        .HasColumnType("int");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -323,6 +341,133 @@ namespace Project_Aether_Backend.Migrations
                         .IsUnique();
 
                     b.ToTable("PlayerProfiles");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.GameCharacter", b =>
+                {
+                    b.HasBaseType("Project_Aether_Backend.Models.GameObject");
+
+                    b.Property<string>("CharacterClass")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<long>("Experience")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasDefaultValue(0L);
+
+                    b.Property<int>("Health")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(100);
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.Property<int>("Mana")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(50);
+
+                    b.HasIndex("InventoryId")
+                        .IsUnique()
+                        .HasFilter("[InventoryId] IS NOT NULL");
+
+                    b.ToTable("GameObjects", t =>
+                        {
+                            t.Property("InventoryId")
+                                .HasColumnName("GameCharacter_InventoryId");
+                        });
+
+                    b.HasDiscriminator().HasValue(9);
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.GameContainer", b =>
+                {
+                    b.HasBaseType("Project_Aether_Backend.Models.GameObject");
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("InventoryId")
+                        .IsUnique()
+                        .HasFilter("[InventoryId] IS NOT NULL");
+
+                    b.HasDiscriminator().HasValue(3);
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.InventoryItem", b =>
+                {
+                    b.HasBaseType("Project_Aether_Backend.Models.GameObject");
+
+                    b.Property<int>("InventoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ItemType")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("Quantity")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
+                    b.HasIndex("InventoryId");
+
+                    b.ToTable("GameObjects", t =>
+                        {
+                            t.Property("InventoryId")
+                                .HasColumnName("InventoryItem_InventoryId");
+                        });
+
+                    b.HasDiscriminator().HasValue(4);
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.NonPlayerCharacter", b =>
+                {
+                    b.HasBaseType("Project_Aether_Backend.Models.GameCharacter");
+
+                    b.ToTable("GameObjects", t =>
+                        {
+                            t.Property("InventoryId")
+                                .HasColumnName("GameCharacter_InventoryId");
+                        });
+
+                    b.HasDiscriminator().HasValue(2);
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.PlayerCharacter", b =>
+                {
+                    b.HasBaseType("Project_Aether_Backend.Models.GameCharacter");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("PlayerProfileId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("profilePictureId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasIndex("PlayerProfileId");
+
+                    b.ToTable("GameObjects", t =>
+                        {
+                            t.Property("InventoryId")
+                                .HasColumnName("GameCharacter_InventoryId");
+                        });
+
+                    b.HasDiscriminator().HasValue(1);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -376,17 +521,6 @@ namespace Project_Aether_Backend.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Project_Aether_Backend.Models.InventoryItem", b =>
-                {
-                    b.HasOne("Project_Aether_Backend.Models.PlayerProfile", "PlayerProfile")
-                        .WithMany("Inventory")
-                        .HasForeignKey("PlayerProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PlayerProfile");
-                });
-
             modelBuilder.Entity("Project_Aether_Backend.Models.OnlineConnection", b =>
                 {
                     b.HasOne("Project_Aether_Backend.Models.ApplicationUser", "User")
@@ -401,7 +535,7 @@ namespace Project_Aether_Backend.Migrations
             modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
                 {
                     b.HasOne("Project_Aether_Backend.Models.ApplicationUser", "User")
-                        .WithOne()
+                        .WithOne("Player")
                         .HasForeignKey("Project_Aether_Backend.Models.PlayerProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -409,9 +543,64 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Project_Aether_Backend.Models.GameCharacter", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.Inventory", "Inventory")
+                        .WithOne()
+                        .HasForeignKey("Project_Aether_Backend.Models.GameCharacter", "InventoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.GameContainer", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.Inventory", "Inventory")
+                        .WithOne()
+                        .HasForeignKey("Project_Aether_Backend.Models.GameContainer", "InventoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.InventoryItem", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.Inventory", "Inventory")
+                        .WithMany("Items")
+                        .HasForeignKey("InventoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Inventory");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.PlayerCharacter", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.PlayerProfile", "Player")
+                        .WithMany("Characters")
+                        .HasForeignKey("PlayerProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Player")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.Inventory", b =>
+                {
+                    b.Navigation("Items");
+                });
+
             modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
                 {
-                    b.Navigation("Inventory");
+                    b.Navigation("Characters");
                 });
 #pragma warning restore 612, 618
         }

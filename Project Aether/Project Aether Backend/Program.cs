@@ -62,6 +62,27 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ClockSkew = TimeSpan.Zero // No delay for token expiration checks
     };
+    // !!! THIS IS WHERE THE MISSING PART GOES !!!
+    // *****************************************************************
+    // *** CRITICAL ADDITION FOR SIGNALR AUTHENTICATION VIA QUERY STRING ***
+    // *****************************************************************
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for your SignalR hub, extract the token from the query string
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/chathub"))) // Make sure this matches your SignalR hub path
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
+    };
+    // *****************************************************************
 });
 
 builder.Services.AddAuthorization(); // Add authorization policies
@@ -126,7 +147,8 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseHttpsRedirection();
+    // TODO: turn this on for actual production.
+    //app.UseHttpsRedirection();
 }
 
 // Use authentication and authorization middleware
