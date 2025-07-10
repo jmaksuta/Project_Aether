@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
+using Moq.EntityFrameworkCore;
 using Project_Aether_Backend.Controllers;
 using Project_Aether_Backend.Data;
-using Project_Aether_Backend.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
+using ProjectAether.Objects.Models;
+using System.Security.Claims;
 
 namespace Project_Aether_Backend_Test
 {
@@ -22,35 +19,62 @@ namespace Project_Aether_Backend_Test
         private Mock<UserManager<ApplicationUser>> _mockUserManager;
         private PlayerCharacterController _controller;
 
+        private const string USER1 = "user1";
+        private const string USER2 = "user2";
+
+        private const string TEST_USER_1 = "testuser1";
+        private const string TEST_USER_2 = "testuser2";
+
+        private const string TEST_PLAYER_1 = "Test Player 1";
+        private const string TEST_PLAYER_2 = "Test Player 2";
+
+        private const string PLAYER_CHARACTER_1_1 = "Player character 1.1";
+        private const string PLAYER_CHARACTER_1_2 = "Player character 1.2";
+        private const string PLAYER_CHARACTER_2_1 = "Player character 2.1";
+        private const string PLAYER_CHARACTER_2_2 = "Player character 2.2";
+
         [SetUp]
         public void Setup()
         {
             // 1. Mock ApplicationDbContext
-            _mockContext = new Mock<ApplicationDbContext>();
+            // Create DbContextOptions for an in-memory database
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Use a unique name for each test run
+                .Options;
+            
+            // Pass the options to the Mock constructor
+            _mockContext = new Mock<ApplicationDbContext>(options); // <--- CHANGE IS HERE
 
-            ApplicationUser user1 = new ApplicationUser { Id = "user1", UserName = "testuser1" };
-            ApplicationUser user2 = new ApplicationUser { Id = "user2", UserName = "testuser2" };
+            // 1. Mock ApplicationDbContext
+            //_mockContext = new Mock<ApplicationDbContext>();
 
-            PlayerProfile user1PlayerProfile = new PlayerProfile { Id = 1, UserId = "user1", User = user1, PlayerName = "Test Player 1" };
-            PlayerProfile user2PlayerProfile = new PlayerProfile { Id = 2, UserId = "user2", User = user2, PlayerName = "Test Player 2" };
+            ApplicationUser user1 = new ApplicationUser { Id = USER1, UserName = TEST_USER_1 };
+            ApplicationUser user2 = new ApplicationUser { Id = USER2, UserName = TEST_USER_2 };
+
+            PlayerProfile user1PlayerProfile = new PlayerProfile { Id = 1, UserId = USER1, User = user1, PlayerName = TEST_PLAYER_1 };
+            PlayerProfile user2PlayerProfile = new PlayerProfile { Id = 2, UserId = USER2, User = user2, PlayerName = TEST_PLAYER_2 };
 
 
             // Set up DbContext's DbSet for Players
             var playersData = new List<PlayerCharacter>
             {
-                new PlayerCharacter { Id = 1, Name = "Player One", PlayerProfileId = user1PlayerProfile.Id, Player = user1PlayerProfile },
-                new PlayerCharacter { Id = 2, Name = "Player Two", PlayerProfileId = user2PlayerProfile.Id, Player = user2PlayerProfile }
+                new PlayerCharacter { Id = 1, Name = PLAYER_CHARACTER_1_1, PlayerProfileId = user1PlayerProfile.Id, Player = user1PlayerProfile },
+                new PlayerCharacter { Id = 2, Name = PLAYER_CHARACTER_2_1, PlayerProfileId = user2PlayerProfile.Id, Player = user2PlayerProfile },
+                new PlayerCharacter { Id = 3, Name = PLAYER_CHARACTER_1_2, PlayerProfileId = user1PlayerProfile.Id, Player = user1PlayerProfile },
+                new PlayerCharacter { Id = 4, Name = PLAYER_CHARACTER_2_2, PlayerProfileId = user2PlayerProfile.Id, Player = user2PlayerProfile },
             }.AsQueryable();
 
-            var mockPlayersDbSet = new Mock<DbSet<PlayerCharacter>>();
-            mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.Provider).Returns(playersData.Provider);
-            mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.Expression).Returns(playersData.Expression);
-            mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.ElementType).Returns(playersData.ElementType);
-            mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.GetEnumerator()).Returns(playersData.GetEnumerator());
-            // For Async operations, you'd need to mock IDbAsyncEnumerable and IDbAsyncEnumerator
-            // This is simplified. For full async mocking, you'd use something like Moq.EntityFrameworkCore.
+            //var mockPlayersDbSet = new Mock<DbSet<PlayerCharacter>>();
+            //mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.Provider).Returns(playersData.Provider);
+            //mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.Expression).Returns(playersData.Expression);
+            //mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.ElementType).Returns(playersData.ElementType);
+            //mockPlayersDbSet.As<IQueryable<PlayerCharacter>>().Setup(m => m.GetEnumerator()).Returns(playersData.GetEnumerator());
+            //// For Async operations, you'd need to mock IDbAsyncEnumerable and IDbAsyncEnumerator
+            //// This is simplified. For full async mocking, you'd use something like Moq.EntityFrameworkCore.
 
-            _mockContext.Setup(c => c.PlayerCharacters).Returns(mockPlayersDbSet.Object);
+            //_mockContext.Setup(c => c.PlayerCharacters).Returns(mockPlayersDbSet.Object);
+
+            _mockContext.Setup(c => c.PlayerCharacters).ReturnsDbSet(playersData); // <--- HUGE SIMPLIFICATION HERE!
 
 
             // 2. Mock UserManager
@@ -59,16 +83,16 @@ namespace Project_Aether_Backend_Test
             // Set up specific UserManager methods as needed for your tests
             // Example: Mock FindByIdAsync
             _mockUserManager
-                .Setup(um => um.FindByIdAsync("user1"))
-                .ReturnsAsync(new ApplicationUser { Id = "user1", UserName = "testuser1" });
+                .Setup(um => um.FindByIdAsync(USER1))
+                .ReturnsAsync(new ApplicationUser { Id = USER1, UserName = TEST_USER_1 });
 
             _mockUserManager
-                .Setup(um => um.FindByIdAsync("user2"))
-                .ReturnsAsync(new ApplicationUser { Id = "user2", UserName = "testuser2" });
+                .Setup(um => um.FindByIdAsync(USER2))
+                .ReturnsAsync(new ApplicationUser { Id = USER2, UserName = TEST_USER_2 });
 
             _mockUserManager
-                .Setup(um => um.FindByIdAsync(It.IsNotIn("user1", "user2"))) // For user not found
-                .ReturnsAsync((ApplicationUser)null);
+                .Setup(um => um.FindByIdAsync(It.IsNotIn(USER1, USER2))) // For user not found
+                .ReturnsAsync(null as ApplicationUser);
 
 
             // 3. Instantiate the controller with the mocked dependencies
@@ -76,26 +100,103 @@ namespace Project_Aether_Backend_Test
         }
 
         [Test]
-        public async Task GetPlayerCharacters_WithValidUserId_ReturnsOkResultWithPlayer()
+        public async Task GetPlayerCharacters_ValidUserId()
         {
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                    new Claim(ClaimTypes.NameIdentifier, USER1),
+                    new Claim(ClaimTypes.Name, TEST_USER_1)
+                }))
+                }
+            };
             // Arrange (already done in Setup for specific user1)
 
             // Act
             var result = await _controller.GetPlayerCharacters();
 
             // Assert
-            Assert.That(result, Is.InstanceOf<ActionResult<PlayerCharacter>>());
+            Assert.That(result, Is.InstanceOf<Microsoft.AspNetCore.Mvc.OkObjectResult>());
+            //Assert.That(result, Is.InstanceOf<ActionResult<PlayerCharacter>>());
+            var okResult = result as OkObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult.StatusCode, Is.EqualTo(200));
+
+            var players = okResult.Value as List<PlayerCharacter>;
+            var playerChar1 = (players != null) ? players[0] : new PlayerCharacter() as PlayerCharacter;
+            Assert.That(playerChar1, Is.Not.Null);
+            Assert.That(playerChar1.Player.User.Id, Is.EqualTo(USER1));
+            Assert.That(playerChar1.Name, Is.EqualTo(PLAYER_CHARACTER_1_1));
+
+            var playerChar2 = (players != null) ? players[1] : new PlayerCharacter() as PlayerCharacter;
+            Assert.That(playerChar2, Is.Not.Null);
+            Assert.That(playerChar2.Player.User.Id, Is.EqualTo(USER1));
+            Assert.That(playerChar2.Name, Is.EqualTo(PLAYER_CHARACTER_1_2));
+
+            _mockUserManager.Verify(um => um.FindByIdAsync(USER1), Times.Never);
+            _mockContext.Verify(c => c.PlayerCharacters, Times.AtLeastOnce); // Verify DbSet was accessed
+        }
+
+        [Test]
+        public async Task GetPlayerCharacterById_ValidUserId()
+        {
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                    new Claim(ClaimTypes.NameIdentifier, USER1),
+                    new Claim(ClaimTypes.Name, TEST_USER_1)
+                }))
+                }
+            };
+            // Arrange (already done in Setup for specific user1)
+
+            // Act
+            var result = await _controller.GetPlayerCharacterById("1");
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<Microsoft.AspNetCore.Mvc.OkObjectResult>());
+            //Assert.That(result, Is.InstanceOf<ActionResult<PlayerCharacter>>());
             var okResult = result as OkObjectResult;
             Assert.That(okResult, Is.Not.Null);
             Assert.That(okResult.StatusCode, Is.EqualTo(200));
 
             var player = okResult.Value as PlayerCharacter;
             Assert.That(player, Is.Not.Null);
-            Assert.That(player.Player.User.Id, Is.EqualTo("user1"));
-            Assert.That(player.Name, Is.EqualTo("Player One"));
+            Assert.That(player.Player.User.Id, Is.EqualTo(USER1));
+            Assert.That(player.Name, Is.EqualTo(PLAYER_CHARACTER_1_1));
 
-            _mockUserManager.Verify(um => um.FindByIdAsync("user1"), Times.Once);
-            _mockContext.Verify(c => c.PlayerCharacters, Times.Once); // Verify DbSet was accessed
+            _mockUserManager.Verify(um => um.FindByIdAsync(USER1), Times.Never);
+            _mockContext.Verify(c => c.PlayerCharacters, Times.AtLeastOnce); // Verify DbSet was accessed
+        }
+
+        [Test]
+        public async Task GetPlayerCharacterById_InvalidUserId()
+        {
+            _controller.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] {
+                    new Claim(ClaimTypes.NameIdentifier, USER2),
+                    new Claim(ClaimTypes.Name, TEST_USER_2)
+                }))
+                }
+            };
+            // Act
+            var result = await _controller.GetPlayerCharacterById("1");
+
+            // Assert
+            Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
+            var okResult = result as NotFoundObjectResult;
+            Assert.That(okResult, Is.Not.Null);
+            Assert.That(okResult.StatusCode, Is.EqualTo(404));
+
+            _mockUserManager.Verify(um => um.FindByIdAsync(USER1), Times.Never);
+            _mockContext.Verify(c => c.PlayerCharacters, Times.AtLeastOnce); // Verify DbSet was accessed
         }
 
         //[Test]
@@ -104,7 +205,7 @@ namespace Project_Aether_Backend_Test
         //    // Arrange (already done in Setup for specific user1)
 
         //    // Act
-        //    var result = await _controller.GetPlayer("user1");
+        //    var result = await _controller.GetPlayer(USER1);
 
         //    // Assert
         //    Assert.That(result, Is.InstanceOf<ActionResult<Player>>());
@@ -114,10 +215,10 @@ namespace Project_Aether_Backend_Test
 
         //    var player = okResult.Value as Player;
         //    Assert.That(player, Is.Not.Null);
-        //    Assert.That(player.UserId, Is.EqualTo("user1"));
+        //    Assert.That(player.UserId, Is.EqualTo(USER1));
         //    Assert.That(player.Name, Is.EqualTo("Player One"));
 
-        //    _mockUserManager.Verify(um => um.FindByIdAsync("user1"), Times.Once);
+        //    _mockUserManager.Verify(um => um.FindByIdAsync(USER1), Times.Once);
         //    _mockContext.Verify(c => c.Players, Times.Once); // Verify DbSet was accessed
         //}
 
@@ -240,7 +341,8 @@ namespace Project_Aether_Backend_Test
             // Act
             var result = playerCharacters.Select(pc => pc.Name).ToList();
             // Assert
-            Assert.AreEqual(2, result.Count);
+            Assert.That(result.Count, Is.EqualTo(2));
+            //Assert.AreEqual(2, result.Count);
             Assert.Contains("Hero1", result);
             Assert.Contains("Hero2", result);
         }

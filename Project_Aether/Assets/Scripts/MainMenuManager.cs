@@ -10,6 +10,8 @@ public class MainMenuManager : MonoBehaviour
 {
     [Header("UI Elements")]
     [SerializeField]
+    private Button newGameButton;
+    [SerializeField]
     private Button startGameButton;
     [SerializeField]
     private Button settingsButton;
@@ -17,6 +19,9 @@ public class MainMenuManager : MonoBehaviour
     private Button exitGameButton;
     [SerializeField]
     private TextMeshProUGUI statusText;
+
+    [SerializeField]
+    private GameObject authenticationUI;
 
     [Header("Game Settings")]
     [SerializeField]
@@ -30,6 +35,10 @@ public class MainMenuManager : MonoBehaviour
             Debug.LogError("NetworkManager.Singleton not found in the scene! Please ensure it's in this scene.", this);
             UpdateStatus("Error: NetworkManager missing!");
             return;
+        }
+        if (newGameButton != null)
+        {
+            newGameButton.onClick.AddListener(OnNewGameButtonClicked);
         }
         if (startGameButton != null)
         {
@@ -46,6 +55,7 @@ public class MainMenuManager : MonoBehaviour
         // Subscribe to Netcode events for feedbas and scene loading
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
         NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
+        NetworkManager.Singleton.OnClientStarted += OnClientStarted;
         NetworkManager.Singleton.OnClientStopped += OnClientStopped;
         // no OnServerStarted if lcients never host/server
     }
@@ -56,12 +66,15 @@ public class MainMenuManager : MonoBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
+            NetworkManager.Singleton.OnClientStarted -= OnClientStarted;
             NetworkManager.Singleton.OnClientStopped -= OnClientStopped;
         }
     }
 
-    public void OnStartGameButtonClicked()
+    private void OnNewGameButtonClicked()
     {
+        gameSceneName = GameConstants.CHARACTER_CREATION_SCENE_NAME;
+
         // Set connection date (if not already set by AutoConnectionManager)
         // if your AutoConnectionManager already set the IPPort for the client, you don't need this here.
         // if you want the user to input the IP, you'd call SetTransportConnectionData() here.
@@ -76,9 +89,54 @@ public class MainMenuManager : MonoBehaviour
         }
         else
         {
-            UpdateStatus("Already connected. Loading Game...");
-            Debug.Log("Already Connect. proceeding to game scene.");
-            SceneManager.LoadScene(gameSceneName);
+            if (AuthManager.Instance.IsAuthenticated())
+            {
+                UpdateStatus("Already connected. Loading Game...");
+                Debug.Log("Already Connect. proceeding to game scene.");
+                SceneManager.LoadScene(gameSceneName);
+            }
+            else
+            {
+                if (authenticationUI != null)
+                {
+                    authenticationUI.SetActive(true);
+                }
+            }
+
+        }
+    }
+
+    public void OnStartGameButtonClicked()
+    {
+        gameSceneName = null;
+        // Set connection date (if not already set by AutoConnectionManager)
+        // if your AutoConnectionManager already set the IPPort for the client, you don't need this here.
+        // if you want the user to input the IP, you'd call SetTransportConnectionData() here.
+        SetTransportConnectionData();
+        // for a game with ONLY one dedicated server, the IP is hardcoded in AutoConnectionManager.
+        // So this just triggers the client start if not already connected.
+        if (!NetworkManager.Singleton.IsClient)
+        {
+            UpdateStatus("Attempting to connect to server...");
+            Debug.Log("Attempting to connect as Client from Main Menu...");
+            NetworkManager.Singleton.StartClient();
+        }
+        else
+        {
+            if (AuthManager.Instance.IsAuthenticated())
+            {
+                UpdateStatus("Already connected. Loading Game...");
+                Debug.Log("Already Connect. proceeding to game scene.");
+                SceneManager.LoadScene(gameSceneName);
+                // TODO: get scene from server.
+            } else
+            {
+                if (authenticationUI != null)
+                {
+                    authenticationUI.SetActive(true);
+                }
+            }
+                
         }
     }
 
@@ -102,8 +160,8 @@ public class MainMenuManager : MonoBehaviour
     private void SetTransportConnectionData()
     {
         // TODO: set connection transport data here.
-        string TargetIpAddress = GameConstants.ConnectionIP;
-        ushort TargetPort = GameConstants.ConnectionPort;
+        string TargetIpAddress = GameConstants.GAME_SERVER_IP_ADDRESS;
+        ushort TargetPort = GameConstants.GAME_SERVER_PORT;
 
         UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
         if (transport == null)
@@ -130,7 +188,10 @@ public class MainMenuManager : MonoBehaviour
         {
             UpdateStatus("Connected. Loading Game...");
             Debug.Log($"Client connected. ClientId={clientId}.");
-            SceneManager.LoadScene(gameSceneName);
+            if (gameSceneName != null)
+            {
+                SceneManager.LoadScene(gameSceneName);
+            }
         }
     }
 
@@ -143,6 +204,11 @@ public class MainMenuManager : MonoBehaviour
             // Handle this. perhaps show a "reconnect" button or just keep them at the main menu.
             // if we are already in the main menu, no need to reload it.
         }
+    }
+
+    private void OnClientStarted()
+    {
+        Debug.Log($"Local client started.");
     }
 
     private void OnClientStopped(bool causedByDisconnect)

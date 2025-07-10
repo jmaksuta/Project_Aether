@@ -348,3 +348,5 @@ F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether 
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.pdb
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.genruntimeconfig.cache
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\ref\Project Aether Backend.Migrations.dll
+F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\ProjectAether.Objects.dll
+F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\ProjectAether.Objects.pdb

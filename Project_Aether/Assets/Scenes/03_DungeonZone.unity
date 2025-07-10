@@ -318,13 +318,70 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4331697829904361762, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
       propertyPath: m_Name
-      value: Portal
+      value: DungeonToForestPortal
+      objectReference: {fileID: 0}
+    - target: {fileID: 4331697829904361762, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
+      propertyPath: m_TagString
+      value: ZoneTransition
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4331697829904361762, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1468771926}
+    - targetCorrespondingSourceObject: {fileID: 4331697829904361762, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1468771925}
   m_SourcePrefab: {fileID: 100100000, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
+--- !u!1 &1468771924 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4331697829904361762, guid: 96b9e371597b3e34c94cd090ad61fab4, type: 3}
+  m_PrefabInstance: {fileID: 1468771923}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1468771925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468771924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18bf7ccfeb9f9a14bb566c7d4cd3b2af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 5
+  rotationSpeed: 100
+  characterController: {fileID: 0}
+  zoneTransitionCoillider: {fileID: 1468771926}
+  targetZoneOnTrigger: 02_ForestZone
+  spawnPointInTargetZone: {x: 0, y: 1, z: 0}
+  interactionRange: 3
+  cameraFollowPoint: {fileID: 0}
+--- !u!65 &1468771926
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468771924}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &1474939871
 GameObject:
   m_ObjectHideFlags: 0

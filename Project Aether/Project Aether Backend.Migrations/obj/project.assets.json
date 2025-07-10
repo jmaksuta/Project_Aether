@@ -2278,6 +2278,7 @@
           "Microsoft.AspNetCore.SignalR": "1.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.6",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
+          "ProjectAether.Objects": "1.0.0",
           "Swashbuckle.AspNetCore": "9.0.1"
         },
         "compile": {
@@ -2289,6 +2290,19 @@
         "frameworkReferences": [
           "Microsoft.AspNetCore.App"
         ]
+      },
+      "ProjectAether.Objects/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.17"
+        },
+        "compile": {
+          "bin/placeholder/ProjectAether.Objects.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ProjectAether.Objects.dll": {}
+        }
       }
     }
   },
@@ -5916,6 +5930,11 @@
       "type": "project",
       "path": "../Project Aether Backend/Project Aether Backend.csproj",
       "msbuildProject": "../Project Aether Backend/Project Aether Backend.csproj"
+    },
+    "ProjectAether.Objects/1.0.0": {
+      "type": "project",
+      "path": "../ProjectAether.Objects/ProjectAether.Objects.csproj",
+      "msbuildProject": "../ProjectAether.Objects/ProjectAether.Objects.csproj"
     }
   },
   "projectFileDependencyGroups": {

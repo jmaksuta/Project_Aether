@@ -6,24 +6,41 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Threading.Tasks;
+using Assets.Scripts;
 
 public class BackendServiceManager : MonoBehaviour
 {
     public static BackendServiceManager Instance { get; private set; }
 
     [Header("Backend API Settings")]
-    [SerializeField]
-    private string authApiUrl = "https://api.yourgame.com/auth"; // Your Auth API endpoint
-    [SerializeField]
+    //[SerializeField]
+    private string authApiUrl = ApiSettings.GetApiUrl(ApiSettings.ApiDomains.Auth); // "https://api.yourgame.com/auth"; // Your Auth API endpoint
+    //[SerializeField]
     private string worldApiUrl = "https://api.yourgame.com/worlds"; // Your World/Lobby API endpoint
-    [SerializeField]
+    //[SerializeField]
     private string signalRHubUrl = "https://api.yourgame.com/chathub"; // Your SignalR Chat Hub URL
 
     // You might store player token here after successful authentication
     private string _playerAuthToken;
     private string _playerId; // Or some identifier from your auth system
+    private string _playerName; // Optional, if your auth system returns player name    
 
     // private HubConnection _signalRConnection; // For SignalR integration
+
+    public void setAuthToken(string token)
+    {
+        _playerAuthToken = token;
+    }   
+
+    public void setPlayerId(string playerId)
+    {
+        _playerId = playerId;
+    }   
+
+    public void setPlayerName(string playerName)
+    {
+        _playerName = playerName;
+    }   
 
     [Header("Game Manager Reference")]
     [SerializeField]
@@ -64,24 +81,41 @@ public class BackendServiceManager : MonoBehaviour
             // Example: Make an HTTP POST request to your ASP.NET Core Auth API
             // This is a simplified example. You'd likely send username/password or use a refresh token.
             // Replace with your actual authentication payload and endpoint.
-            var request = UnityWebRequest.Post(authApiUrl + "/login", JsonUtility.ToJson(new { username = "testuser", password = "testpassword" }));
-            request.SetRequestHeader("Content-Type", "application/json");
-            await request.SendWebRequest();
+            // TODO: login happens elsewhere, this is just a placeholder for the example
+            //var response = await ProjectAetherBackendApi.Login("testuser", "Password1234!");
+            //_playerAuthToken = response.token;
+            //_playerId = response.userId;
+            //_playerName = response.username;
 
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError($"Authentication failed: {request.error} - {request.downloadHandler.text}");
-                gameManager.SetStatusText($"Auth Error: {request.error}");
-                return;
-            }
+            //Debug.Log($"Successfully authenticated with backend. Player ID: {_playerId}");
+            //gameManager.SetStatusText($"Signed in as {_playerId}");
 
-            // Assuming your backend returns a JSON with an auth token and player ID
-            var authResponse = JsonUtility.FromJson<AuthResponse>(request.downloadHandler.text);
-            _playerAuthToken = authResponse.Token;
-            _playerId = authResponse.PlayerId;
+            //LoginRequest loginRequest = new LoginRequest("testuser", "Password1234!"); // Replace with actual user credentials
+            //string requestBody = JsonUtility.ToJson(loginRequest);
 
-            Debug.Log($"Successfully authenticated with backend. Player ID: {_playerId}");
-            gameManager.SetStatusText($"Signed in as {_playerId}");
+            //var request = UnityWebRequest.Post(authApiUrl + "login", requestBody, "application/json");
+            ////UnityWebRequest.Post(authApiUrl + "login", JsonUtility.ToJson(new { username = "testuser", password = "Password1234!" }));
+            ////request.SetRequestHeader("Content-Type", "application/json");
+            //request.SetRequestHeader("accept", "*/*");
+            //request.SetRequestHeader("User-Agent", "UnityGameClient/1.0");
+            //request.SetRequestHeader("Accept-Encoding", "gzip, deflate, br");
+            //request.SetRequestHeader("Connection", "keep-alive");
+            //request.SetRequestHeader("Content-Type", "application/json");   
+            ////request.SetRequestHeader("Authorization", "Bearer " + _playerAuthToken); // If you have a token to pass
+            //await request.SendWebRequest();
+
+            //if (request.result != UnityWebRequest.Result.Success)
+            //{
+            //    Debug.LogError($"Authentication failed: {request.error} - {request.downloadHandler.text}");
+            //    gameManager.SetStatusText($"Auth Error: {request.error}");
+            //    return;
+            //}
+
+            //// Assuming your backend returns a JSON with an auth token and player ID
+            //var authResponse = JsonUtility.FromJson<AuthResponse>(request.downloadHandler.text);
+
+
+
 
         }
         catch (Exception e)
@@ -91,11 +125,26 @@ public class BackendServiceManager : MonoBehaviour
         }
     }
 
+    [Serializable]
+    private class LoginRequest
+    {
+        public string Username;
+        public string Password;
+
+        public LoginRequest(string username, string password)
+        {
+            Username = username;
+            Password = password;
+        }
+    }
+
     [System.Serializable]
     private class AuthResponse
     {
-        public string Token;
-        public string PlayerId;
+        public string token;
+        //public string PlayerId;
+        public string userId;
+        public string username;
         // Add other fields your auth response might have (e.g., player name)
     }
 

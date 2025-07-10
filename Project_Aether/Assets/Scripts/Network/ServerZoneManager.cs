@@ -18,7 +18,8 @@ public class ServerZoneManager : NetworkBehaviour
     private Dictionary<ulong, string> clientCurrentZone = new Dictionary<ulong, string>();
 
     // Backend API URL for world persistence
-    [SerializeField] private string worldPersistenceApiUrl = "https://api.yourgame.com/worldpersistence";
+    [SerializeField] 
+    private string worldPersistenceApiUrl = "https://api.yourgame.com/worldpersistence";
 
     private void Awake()
     {

@@ -17,12 +17,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/03_DungeonZone.unity
     guid: 41813a8467a379c4fb7dac9e560c6da2
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: bbfd6f7a561da634b9f7740bfd5877f0
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MultiplayerScene.unity
     guid: e803d805234fb954e840bb8baafc8250
+  - enabled: 1
+    path: Assets/Scenes/02_MainMenu.unity
+    guid: 449062c62dd5f3d45a0c29119b463e1f
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: abfa54588d563e24087c76a2dd93ddaf, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: c79b216dc35a5c44ca12d2a279159926, type: 2}

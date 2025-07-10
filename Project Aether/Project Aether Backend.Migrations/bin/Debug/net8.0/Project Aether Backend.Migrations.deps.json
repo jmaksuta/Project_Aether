@@ -1369,10 +1369,22 @@
           "Microsoft.AspNetCore.SignalR": "1.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "9.0.6",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "9.0.4",
+          "ProjectAether.Objects": "1.0.0",
           "Swashbuckle.AspNetCore": "9.0.1"
         },
         "runtime": {
           "Project Aether Backend.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "ProjectAether.Objects/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "8.0.17"
+        },
+        "runtime": {
+          "ProjectAether.Objects.dll": {
             "assemblyVersion": "1.0.0.0",
             "fileVersion": "1.0.0.0"
           }
@@ -2199,6 +2211,11 @@
       "hashPath": "system.windows.extensions.6.0.0.nupkg.sha512"
     },
     "Project Aether Backend/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ProjectAether.Objects/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

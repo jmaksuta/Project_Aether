@@ -18,7 +18,8 @@ public class InteractableObject : NetworkBehaviour
     private TextMeshProUGUI interactionText;
 
     // A unique ID for this object instance in the world (e.g., GUID or scene-specific ID)
-    [SerializeField] private string uniqueID; // Set this in Editor for each instance
+    [SerializeField]
+    private string uniqueID; // Set this in Editor for each instance
 
     private NetworkVariable<Color> currentColor = new NetworkVariable<Color>();
     private NetworkVariable<bool> isInteracted = new NetworkVariable<bool>();

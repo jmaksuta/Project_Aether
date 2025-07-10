@@ -8,8 +8,8 @@ using UnityEngine.UI;
 public class AutoConnectionManager : MonoBehaviour // Inherit from MonoBehaviour
 {
     // --- Compile-Time Constants based on Build Type ---
-    private const string TargetIpAddress = GameConstants.ConnectionIP; // Default IP for client to connect to server
-    private const ushort TargetPort = GameConstants.ConnectionPort; // Default server port
+    private const string TargetIpAddress = GameConstants.GAME_SERVER_IP_ADDRESS; // Default IP for client to connect to server
+    private const ushort TargetPort = GameConstants.GAME_SERVER_PORT; // Default server port
     private const bool IsDedicatedServerBuild = GameConstants.IsDedicatedServer;
 
     [Header("Scene Names")]
@@ -50,9 +50,12 @@ public class AutoConnectionManager : MonoBehaviour // Inherit from MonoBehaviour
         }
         else // This is the Client Build
         {
-            NetworkManager.Singleton.StartClient();
-            Debug.Log($"Automatically started CLIENT, attempting to connect to {TargetIpAddress}:{TargetPort}");
-            UpdateStatus($"Connecting to {TargetIpAddress}:{TargetPort}...");
+            if (!NetworkManager.Singleton.IsClient)
+            {
+                NetworkManager.Singleton.StartClient();
+                Debug.Log($"Automatically started CLIENT, attempting to connect to {TargetIpAddress}:{TargetPort}");
+                UpdateStatus($"Connecting to {TargetIpAddress}:{TargetPort}...");
+            }
         }
     }
 

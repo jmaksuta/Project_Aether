@@ -56,11 +56,23 @@ public class GameManager : MonoBehaviour
         }
 
         // Wire up UI buttons to the new BackendServiceManager
-        createWorldButton.onClick.AddListener(backendServiceManager.CreateWorld);
-        listWorldsButton.onClick.AddListener(backendServiceManager.ListWorlds);
-        joinWorldButton.onClick.AddListener(() =>
-            backendServiceManager.JoinWorld(ipPortInputField.text)); // Pass the IP:Port string
-        leaveNetworkButton.onClick.AddListener(backendServiceManager.LeaveNetworkAndWorld);
+        if (createWorldButton != null)
+        {
+            createWorldButton.onClick.AddListener(backendServiceManager.CreateWorld);
+        }
+        if (listWorldsButton != null)
+        {
+            listWorldsButton.onClick.AddListener(backendServiceManager.ListWorlds);
+        }
+        if (joinWorldButton != null)
+        {
+            joinWorldButton.onClick.AddListener(() =>
+                backendServiceManager.JoinWorld(ipPortInputField.text)); // Pass the IP:Port string
+        }
+        if (leaveNetworkButton != null)
+        {
+            leaveNetworkButton.onClick.AddListener(backendServiceManager.LeaveNetworkAndWorld);
+        }
 
         UpdateUI(); // Initial UI state
 
@@ -103,11 +115,11 @@ public class GameManager : MonoBehaviour
     {
         bool networkActive = NetworkManager.Singleton.IsClient || NetworkManager.Singleton.IsServer;
 
-        createWorldButton.interactable = !networkActive;
-        listWorldsButton.interactable = !networkActive;
-        joinWorldButton.interactable = !networkActive;
-        ipPortInputField.interactable = !networkActive;
-        leaveNetworkButton.interactable = networkActive;
+        if (createWorldButton != null) createWorldButton.interactable = !networkActive;
+        if (listWorldsButton != null) listWorldsButton.interactable = !networkActive;
+        if (joinWorldButton != null) joinWorldButton.interactable = !networkActive;
+        if (ipPortInputField != null) ipPortInputField.interactable = !networkActive;
+        if (leaveNetworkButton != null) leaveNetworkButton.interactable = networkActive;
 
         if (networkActive)
         {

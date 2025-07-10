@@ -31,7 +31,8 @@
         "System.Text.Json.dll",
         "System.Text.Encodings.Web.dll",
         "System.Runtime.CompilerServices.Unsafe.dll",
-        "System.Threading.Channels.dll"
+        "System.Threading.Channels.dll",
+        "ProjectAether.Objects.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -13,6 +15,13 @@ public class NetworkManagerSetup : MonoBehaviour
 
     async void Awake()
     {
+        // Add DontDestroyOnLoad to the NetworkManager_Setup GameObject itself
+        // This ensures the NetworkManager and this setup script persist while Bootstrap Scene unloads,
+        // and only the NetworkManager component (and its children/settings) will truly live on
+        // as a DontDestroyOnLoad component within the NetworkManager's internal persistence.
+        // It's primarily for this script's Awake/Start to complete before scene changes.
+        DontDestroyOnLoad(this.gameObject); // Important for the client path especially
+
         // Check command-line arguments for dedicated server build
         string[] args = Environment.GetCommandLineArgs();
         bool isDedicatedServer = false;
@@ -50,7 +59,8 @@ public class NetworkManagerSetup : MonoBehaviour
         {
             // For clients (Editor or built client)
             // Your custom BackendServiceManager will handle authentication and getting server connection details.
-            SceneManager.LoadScene(GameConstants.PERSISTENT_SCENE_NAME); // Load main menu/lobby scene
+            Debug.Log("Client: Starting scene load sequence.");
+            StartCoroutine(LoadClientCoreScenes()); // Start the new client loading routine
         }
     }
 
@@ -87,6 +97,8 @@ public class NetworkManagerSetup : MonoBehaviour
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnServerStarted += OnNetcodeServerStarted;
+            // For clients, you might want to subscribe to OnClientStarted
+            NetworkManager.Singleton.OnClientStarted += OnNetcodeClientStarted;
         }
     }
 
@@ -95,6 +107,7 @@ public class NetworkManagerSetup : MonoBehaviour
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnServerStarted -= OnNetcodeServerStarted;
+            NetworkManager.Singleton.OnClientStarted -= OnNetcodeClientStarted;
         }
     }
 
@@ -103,6 +116,57 @@ public class NetworkManagerSetup : MonoBehaviour
         Debug.Log("Server: Netcode server fully started!");
         // Additional server-side initialization after Netcode is fully up.
         // ServerZoneManager might kick off its full zone loading here by talking to your backend.
+    }
+
+    private void OnNetcodeClientStarted()
+    {
+        Debug.Log("Client: Netcode client fully started!");
+        // This is called when the client successfully connects to a server.
+        // You might use this to trigger UI changes or initial client-side network setup.
+    }
+
+    private IEnumerator LoadClientCoreScenes()
+    {
+        Debug.Log("Bootstrap: Starting core scene loading...");
+        // 1. Load PersistentScene additively 
+        // This ensures all global managers are initialized and ready. 
+        // We use LoadSceneAsync for smoother loading.
+        AsyncOperation loadPersistent = SceneManager.LoadSceneAsync(GameConstants.PERSISTENT_SCENE_NAME, LoadSceneMode.Additive);
+        while (!loadPersistent.isDone)
+        {
+            // You could update a simple loading bar or splash screen here
+            Debug.Log($"Loading Persistent Scene: {loadPersistent.progress * 100}%"); yield return null;
+        }
+        Debug.Log("Bootstrap: Persistent Scene loaded. Activating it.");
+        // Make the persistent scene active if needed, although often not strictly required 
+        // unless you're doing operations directly on its root objects immediately. 
+        //SceneManager.SetActiveScene(SceneManager.GetSceneByName(GameConstants.PERSISTENT_SCENE_NAME));
+
+
+        // 2. Unload the Bootstrap Scene (optional but good for memory) 
+        // This scene has done its job and can be removed. 
+        // We do this AFTER the persistent scene is loaded, so its managers take over.
+        //AsyncOperation unloadBootstrap = SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+        //while (!unloadBootstrap.isDone)
+        //{
+        //    yield return null;
+        //}
+        //Debug.Log("Bootstrap: Bootstrap Scene unloaded.");
+
+        // 3. Load the Main Menu Scene (single mode, as it will replace the current active scene)
+        // This will automatically unload the 00_BootstrapScene, but PersistentScene remains.
+        Debug.Log("Bootstrap: Loading Main Menu Scene...");
+        AsyncOperation loadMainMenu = SceneManager.LoadSceneAsync(GameConstants.MAIN_MENU_SCENE_NAME, LoadSceneMode.Single);
+        // LoadSceneMode.Single will automatically unload all other scenes EXCEPT those marked with DontDestroyOnLoad 
+        // which includes our PersistentScene if its objects are setup correctly.
+        while (!loadMainMenu.isDone)
+        {
+            // This is where you'd manage a more complex loading screen, 
+            // perhaps shown *between* the Bootstrap and Main Menu.
+            yield return null;
+        }
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(GameConstants.MAIN_MENU_SCENE_NAME));
+        Debug.Log("Bootstrap: Main Menu Scene loaded and active.");
     }
 
 }
