@@ -1,16 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Microsoft.OpenApi.Writers;
 using Project_Aether_Backend.Data;
 using Project_Aether_Backend.Hubs;
-using Project_Aether_Backend.Models;
-using System.Reflection;
+using ProjectAether.Objects.Models;
 using System.Text;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args); //WebApplication.CreateSlimBuilder(args);
 
@@ -41,7 +37,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 // 3. Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"]);
+var key = Encoding.ASCII.GetBytes(jwtSettings["Secret"] ?? "");
 
 builder.Services.AddAuthentication(options =>
 {

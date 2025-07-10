@@ -2,11 +2,8 @@
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Project_Aether_Backend.Data;
-using Project_Aether_Backend.Models;
-using System.Runtime.CompilerServices;
+using ProjectAether.Objects.Models;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Project_Aether_Backend.Hubs
 {
@@ -61,7 +58,7 @@ namespace Project_Aether_Backend.Hubs
         public async Task SendGlobalChat(string message)
         {
             // Get the current user's name from the authenticated context
-            var username = Context.User.Identity.Name;
+            var username = this.UserName;
             await Clients.All.SendAsync("ReceiveGlobalChat", username, message);
         }
 
@@ -226,7 +223,7 @@ namespace Project_Aether_Backend.Hubs
             await Clients.All.SendAsync("UserStatusUpdate", currentlyOnlineUserNames);
         }
 
-        public override async Task OnDisconnectedAsync(Exception exception)
+        public override async Task OnDisconnectedAsync(Exception? exception)
         {
             //Console.WriteLine($"User {Context.User.Identity.Name} disconnected with ID:{Context.ConnectionId}.");
             //// Optionally, remove user from "online" list via Redis
