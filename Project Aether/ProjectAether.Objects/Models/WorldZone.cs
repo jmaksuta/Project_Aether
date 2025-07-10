@@ -38,7 +38,7 @@ namespace ProjectAether.Objects.Models
         /// <summary>
         /// Port number of the server hosting the zone.
         /// </summary>
-        public short ServerPort { get; set; }
+        public int ServerPort { get; set; }
 
         /// <summary>
         /// Collection of game objects located within this zone.

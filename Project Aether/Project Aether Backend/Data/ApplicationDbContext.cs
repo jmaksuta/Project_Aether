@@ -279,6 +279,7 @@ namespace Project_Aether_Backend.Data
         private void SeedData(ModelBuilder builder)
         {
             SeedArchetypeData(builder);
+            SeedWorldZoneData(builder);
         }
 
         private void SeedArchetypeData(ModelBuilder builder)
@@ -508,6 +509,55 @@ namespace Project_Aether_Backend.Data
             );
 
         }
+
+        private void SeedWorldZoneData(ModelBuilder builder)
+        {
+            builder.Entity<WorldZone>().HasData(
+                new WorldZone
+                {
+                    Id = 1,
+                    Name = "Node Forge",
+                    Description = "The character's starting point",
+                    ZoneId = 1,
+                    SceneName = "04_NodeForge_Intro",
+                    ServerIPAddress = "192.168.1.147",
+                    ServerPort = 55002, // Set to 0 or null if no specific port is assigned
+                },
+                new WorldZone
+                {
+                    Id = 2,
+                    Name = "Forest Zone",
+                    Description = "The Forest Zone",
+                    ZoneId = 2,
+                    SceneName = "05_ForestZone",
+                    ServerIPAddress = "192.168.1.147",
+                    ServerPort = 55003, // Set to 0 or null if no specific port is assigned
+                },
+                new WorldZone
+                {
+                    Id = 3,
+                    Name = "Dungeon Zone",
+                    Description = "The Dungeon Zone",
+                    ZoneId = 3,
+                    SceneName = "05_DungeonZone",
+                    ServerIPAddress = "192.168.1.147",
+                    ServerPort = 55004, // Set to 0 or null if no specific port is assigned
+                },
+                new WorldZone
+                {
+                    Id = 4,
+                    Name = "Main City",
+                    Description = "The Main City Zone",
+                    ZoneId = 4,
+                    SceneName = "05_MainCityScene",
+                    ServerIPAddress = "192.168.1.147",
+                    ServerPort = 55005, // Set to 0 or null if no specific port is assigned
+                }
+
+
+                );
+        }
+
     }
 
 }
