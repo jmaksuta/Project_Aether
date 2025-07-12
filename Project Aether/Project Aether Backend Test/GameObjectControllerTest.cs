@@ -1,15 +1,11 @@
-﻿using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
-using System.Linq;
+using Project_Aether_Backend.Models;
 using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Net.Http.Json;
+using System.Text;
 
 namespace Project_Aether_Backend_Test
 {

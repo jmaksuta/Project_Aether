@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Security.Claims;
 
 namespace Project_Aether_Backend.Controllers

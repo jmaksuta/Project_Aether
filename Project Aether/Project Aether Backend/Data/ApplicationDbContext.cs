@@ -1,17 +1,7 @@
-﻿using Azure;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using ProjectAether.Objects.Models;
-using System.Diagnostics.Metrics;
-using System.Drawing;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Reflection.Emit;
-using static System.Net.Mime.MediaTypeNames;
-using System.Reflection.PortableExecutable;
-using System.Runtime.InteropServices;
+using Project_Aether_Backend.Models;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 
 namespace Project_Aether_Backend.Data
 {
@@ -40,7 +30,7 @@ namespace Project_Aether_Backend.Data
         public DbSet<NonPlayerCharacter> NonPlayerCharacters { get; set; }
 
         // DbSet for player profiles (beyond basic identity)
-        public DbSet<PlayerProfile> PlayerProfiles { get; set; }
+        public DbSet<Models.PlayerProfile> PlayerProfiles { get; set; }
         // ApplicationUser is handled by IdentityDbContext
 
         public DbSet<WorldZone> WorldZones { get; set; }
@@ -129,12 +119,31 @@ namespace Project_Aether_Backend.Data
                 .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of PlayerProfile if it has characters
 
             // --- PlayerProfile and ApplicationUser (One-to-One) ---
-            builder.Entity<PlayerProfile>()
-                .HasOne(pp => pp.User)
-                .WithOne(au => au.Player) // An ApplicationUser has one PlayerProfile
-                .HasForeignKey<PlayerProfile>(pp => pp.UserId)
+            builder.Entity<Models.PlayerProfile>()
+                .HasOne(pp => pp.ApplicationUser)
+                .WithOne(au => au.Player) // An User has one PlayerProfile
+                .HasForeignKey<Models.PlayerProfile>(pp => pp.ApplicationUserId)
                 .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete PlayerProfile when ApplicationUser is deleted
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete PlayerProfile when User is deleted
+
+
+            //builder.Entity<ApplicationUser>(entity =>
+            //{
+            //    entity.HasOne(u => u.Player)         // An ApplicationUser has one PlayerProfile
+            //          .WithOne(p => p.ApplicationUser) // A PlayerProfile has one ApplicationUser
+            //          .HasForeignKey<Models.PlayerProfile>(p => p.ApplicationUserId) // The foreign key is on PlayerProfile
+            //          .IsRequired(false) // PlayerProfile is optional for an ApplicationUser (FK is nullable)
+            //          .OnDelete(DeleteBehavior.Cascade); // Optional: If ApplicationUser deleted, PlayerProfile deleted
+            //                                             // Consider DeleteBehavior.NoAction or ClientSetNull if you prefer manual deletion or want to prevent cascade.
+            //});
+
+            //builder.Entity<ApplicationUser>()
+            //   .HasOne(u => u.Player)         // An ApplicationUser has one PlayerProfile
+            //   .WithOne(p => p.ApplicationUser) // A PlayerProfile has one ApplicationUser
+            //   .HasForeignKey<Models.PlayerProfile>(p => p.ApplicationUserId) // The foreign key is on PlayerProfile
+            //   .IsRequired(false); // Make the foreign key nullable if a user can exist without a profile initially
+
+
 
             // --- ArchetypeDefinition and PlayerCharacter (One-to-One) ---
             builder.Entity<PlayerCharacter>()
@@ -151,6 +160,15 @@ namespace Project_Aether_Backend.Data
                 .HasForeignKey<ArchetypeDefinition>(ad => ad.StoreItemId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict); // Set StoreItemId to null if the StoreItem is deleted
+
+
+            // --- User and ApplicationUser (One-to-One) ---    
+            //builder.Entity<ApplicationUser>()
+            //    .HasOne(au => au.user)
+            //    .WithOne()
+            //    .HasForeignKey<ApplicationUser>(au => au.Id) // Assuming Id is the primary key
+            //    .IsRequired()
+            //    .OnDelete(DeleteBehavior.Cascade); // Cascade delete ApplicationUser when User is deleted
 
             // --- OnlinConnection and ApplicationUser (One-to-One) ---
             builder.Entity<OnlineConnection>()
@@ -224,7 +242,7 @@ namespace Project_Aether_Backend.Data
                 .Property(ii => ii.ItemType)
                 .HasMaxLength(50);
 
-            builder.Entity<PlayerProfile>()
+            builder.Entity<Models.PlayerProfile>()
                 .Property(pp => pp.PlayerName)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -265,9 +283,27 @@ namespace Project_Aether_Backend.Data
                                           // Or .HasConversion<int>(); // Store enum as integer (default)
 
             // Configure Identity specific tables if needed, e.g., max lengths for User fields
-            builder.Entity<ApplicationUser>()
+            builder.Entity<User>()
                 .Property(u => u.DateRegistered)
                 .HasDefaultValueSql("GETDATE()"); // Example for SQL Server
+
+
+            builder.Entity<OnlineConnection>()
+                .Property(oc => oc.ConnectionId)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            builder.Entity<OnlineConnection>()
+                .Property(oc => oc.UserId)
+                .HasMaxLength(450);
+
+            builder.Entity<OnlineConnection>()
+                .Property(oc => oc.UserName)
+                .HasMaxLength(256);
+
+            builder.Entity<OnlineConnection>()
+                .Property(oc => oc.ConnectedAt)
+                .IsRequired();
 
             // -------------------------------------------------------
 

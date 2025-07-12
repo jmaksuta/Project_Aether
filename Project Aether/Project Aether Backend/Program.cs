@@ -5,7 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project_Aether_Backend.Data;
 using Project_Aether_Backend.Hubs;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args); //WebApplication.CreateSlimBuilder(args);

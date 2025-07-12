@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
+using Project_Aether_Backend.Shared;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -24,6 +26,22 @@ namespace Project_Aether_Backend.Controllers
             _configuration = configuration;
         }
 
+
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<User>> GetUserProfile(string userId)
+        {
+            var appUser = await _userManager.FindByIdAsync(userId);
+            if (appUser == null)
+            {
+                return NotFound();
+            }
+
+            // Map the ApplicationUser to your shared User model
+            var sharedUser = UserMapper.ToSharedUser(appUser);
+            return Ok(sharedUser);
+        }
+
+
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest model)
         {
@@ -41,6 +59,9 @@ namespace Project_Aether_Backend.Controllers
 
             if (result.Succeeded)
             {
+                User sharedUser = UserMapper.ToSharedUser(user);
+                sharedUser.DateRegistered = DateTime.UtcNow; // Set registration date in shared model
+
                 return Ok(new { Message = "User registered successfully." });
             }
 

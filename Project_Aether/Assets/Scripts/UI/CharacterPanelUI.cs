@@ -1,10 +1,9 @@
+using Assets.Scripts.Character;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using ProjectAether.Objects.Models;
-using Microsoft.Extensions.Options;
-using System;
-using Assets.Scripts.Character;
 public class CharacterPanelUI : MonoBehaviour
 {
     [Header("UI Elements")]

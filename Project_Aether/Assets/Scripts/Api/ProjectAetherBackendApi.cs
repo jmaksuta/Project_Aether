@@ -1,13 +1,12 @@
 using Assets.Scripts;
 using Assets.Scripts.Api;
-using ProjectAether.Objects.Models;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
-using static ProjectAetherBackendApi;
 
 public class ProjectAetherBackendApi
 {

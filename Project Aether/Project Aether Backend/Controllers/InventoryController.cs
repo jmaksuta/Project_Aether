@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using static Project_Aether_Backend.Controllers.PlayerCharacterController;
 
 namespace Project_Aether_Backend.Controllers

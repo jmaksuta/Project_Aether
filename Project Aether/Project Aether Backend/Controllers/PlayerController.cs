@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System.Security.Claims; // For accessing User.FindFirstValue
 
 namespace Project_Aether_Backend.Controllers
@@ -18,14 +19,14 @@ namespace Project_Aether_Backend.Controllers
         {
             var profile = await _context.PlayerProfiles
                 .Include(p => p.Characters) // Include inventory items   
-                .FirstOrDefaultAsync(p => p.UserId == this.UserId);
+                .FirstOrDefaultAsync(p => p.ApplicationUserId == this.UserId);
 
             if (profile == null)
             {
                 // If no profile exists, create a default one
-                var newProfile = new PlayerProfile
+                var newProfile = new Models.PlayerProfile
                 {
-                    UserId = this.UserId,
+                    ApplicationUserId = this.UserId,
                     PlayerName = this.UserName, // Use username as default display name
                     Characters = new List<PlayerCharacter>()
                 };
@@ -43,7 +44,7 @@ namespace Project_Aether_Backend.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get UserId from JWT Token
 
             var profile = await _context.PlayerProfiles
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+                .FirstOrDefaultAsync(p => p.ApplicationUserId == userId);
             if (profile == null)
             {
                 return NotFound(new { Message = "Player profile not found." });

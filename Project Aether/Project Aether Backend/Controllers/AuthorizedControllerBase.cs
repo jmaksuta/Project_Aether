@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
 using System.Security.Claims;
 
 namespace Project_Aether_Backend.Controllers

@@ -12,7 +12,7 @@
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
-    "allowUnsafeCode": false,
+    "allowUnsafeCode": true,
     "overrideReferences": true,
     "precompiledReferences": [
         "Microsoft.AspNetCore.Connections.Abstractions.dll",
@@ -32,7 +32,8 @@
         "System.Text.Encodings.Web.dll",
         "System.Runtime.CompilerServices.Unsafe.dll",
         "System.Threading.Channels.dll",
-        "ProjectAether.Objects.dll"
+        "Microsoft.Extensions.DependencyInjection.dll",
+        "ProjectAether.Objects.Net.2.1.Standard.dll"
     ],
     "autoReferenced": true,
     "defineConstraints": [],

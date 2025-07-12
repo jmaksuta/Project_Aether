@@ -155,77 +155,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("DateRegistered")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ProjectAether.Objects.Models.ArchetypeDefinition", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.ArchetypeDefinition", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -580,7 +510,7 @@ namespace Project_Aether_Backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameObject", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameObject", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -637,7 +567,7 @@ namespace Project_Aether_Backend.Migrations
                     b.UseTphMappingStrategy();
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.Inventory", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.Inventory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -650,7 +580,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("Inventories");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.OnlineConnection", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.OnlineConnection", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -687,7 +617,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("OnlineConnections");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.PlayerProfile", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -697,8 +627,7 @@ namespace Project_Aether_Backend.Migrations
 
                     b.Property<string>("PlayerName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -709,10 +638,10 @@ namespace Project_Aether_Backend.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("PlayerProfiles");
+                    b.ToTable("PlayerProfile");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.StoreItem", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.StoreItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -763,7 +692,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("StoreItems");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.StoreTransaction", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.StoreTransaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -785,7 +714,7 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("StoreTransactions");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.StoreTransactionItem", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.StoreTransactionItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -823,7 +752,26 @@ namespace Project_Aether_Backend.Migrations
                     b.ToTable("StoreTransactionItems");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.WorldZone", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("DateRegistered")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("User");
+                });
+
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.WorldZone", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -900,9 +848,107 @@ namespace Project_Aether_Backend.Migrations
                         });
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameCharacter", b =>
+            modelBuilder.Entity("Project_Aether_Backend.Models.ApplicationUser", b =>
                 {
-                    b.HasBaseType("ProjectAether.Objects.Models.GameObject");
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateRegistered")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("userId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PlayerName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerProfiles");
+                });
+
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter", b =>
+                {
+                    b.HasBaseType("ProjectAether.Objects.Net._2._1.Standard.Models.GameObject");
 
                     b.Property<long>("Experience")
                         .ValueGeneratedOnAdd()
@@ -947,9 +993,9 @@ namespace Project_Aether_Backend.Migrations
                     b.HasDiscriminator().HasValue(9);
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameContainer", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameContainer", b =>
                 {
-                    b.HasBaseType("ProjectAether.Objects.Models.GameObject");
+                    b.HasBaseType("ProjectAether.Objects.Net._2._1.Standard.Models.GameObject");
 
                     b.Property<int>("InventoryId")
                         .HasColumnType("int");
@@ -961,9 +1007,9 @@ namespace Project_Aether_Backend.Migrations
                     b.HasDiscriminator().HasValue(3);
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.InventoryItem", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.InventoryItem", b =>
                 {
-                    b.HasBaseType("ProjectAether.Objects.Models.GameObject");
+                    b.HasBaseType("ProjectAether.Objects.Net._2._1.Standard.Models.GameObject");
 
                     b.Property<int>("InventoryId")
                         .HasColumnType("int");
@@ -992,9 +1038,9 @@ namespace Project_Aether_Backend.Migrations
                     b.HasDiscriminator().HasValue(4);
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.NonPlayerCharacter", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.NonPlayerCharacter", b =>
                 {
-                    b.HasBaseType("ProjectAether.Objects.Models.GameCharacter");
+                    b.HasBaseType("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter");
 
                     b.ToTable("GameObjects", t =>
                         {
@@ -1005,9 +1051,9 @@ namespace Project_Aether_Backend.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.PlayerCharacter", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter", b =>
                 {
-                    b.HasBaseType("ProjectAether.Objects.Models.GameCharacter");
+                    b.HasBaseType("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter");
 
                     b.Property<string>("DisplayName")
                         .IsRequired()
@@ -1017,11 +1063,16 @@ namespace Project_Aether_Backend.Migrations
                     b.Property<int>("PlayerProfileId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PlayerProfileId1")
+                        .HasColumnType("int");
+
                     b.Property<string>("profilePictureId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasIndex("PlayerProfileId");
+
+                    b.HasIndex("PlayerProfileId1");
 
                     b.ToTable("GameObjects", t =>
                         {
@@ -1043,7 +1094,7 @@ namespace Project_Aether_Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", null)
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1052,7 +1103,7 @@ namespace Project_Aether_Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", null)
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1067,7 +1118,7 @@ namespace Project_Aether_Backend.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", null)
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1076,26 +1127,26 @@ namespace Project_Aether_Backend.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", null)
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.ArchetypeDefinition", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.ArchetypeDefinition", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.StoreItem", "StoreItem")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.StoreItem", "StoreItem")
                         .WithOne()
-                        .HasForeignKey("ProjectAether.Objects.Models.ArchetypeDefinition", "StoreItemId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.ArchetypeDefinition", "StoreItemId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("StoreItem");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameObject", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameObject", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.WorldZone", "WorldZone")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.WorldZone", "WorldZone")
                         .WithMany("GameObjects")
                         .HasForeignKey("WorldZoneId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1104,31 +1155,31 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("WorldZone");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.OnlineConnection", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.OnlineConnection", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", "User")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.User", "User")
                         .WithOne()
-                        .HasForeignKey("ProjectAether.Objects.Models.OnlineConnection", "UserId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.OnlineConnection", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.PlayerProfile", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerProfile", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", "User")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.User", "User")
                         .WithOne("Player")
-                        .HasForeignKey("ProjectAether.Objects.Models.PlayerProfile", "UserId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerProfile", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.StoreTransaction", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.StoreTransaction", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.ApplicationUser", "User")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1137,15 +1188,15 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.StoreTransactionItem", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.StoreTransactionItem", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.StoreItem", "StoreItem")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.StoreItem", "StoreItem")
                         .WithMany()
                         .HasForeignKey("StoreItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectAether.Objects.Models.StoreTransaction", "StoreTransaction")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.StoreTransaction", "StoreTransaction")
                         .WithMany()
                         .HasForeignKey("StoreTransactionId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1156,17 +1207,37 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("StoreTransaction");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameCharacter", b =>
+            modelBuilder.Entity("Project_Aether_Backend.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.Inventory", "Inventory")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.User", "user")
+                        .WithMany()
+                        .HasForeignKey("userId");
+
+                    b.Navigation("user");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
+                {
+                    b.HasOne("Project_Aether_Backend.Models.ApplicationUser", "ApplicationUser")
+                        .WithOne("Player")
+                        .HasForeignKey("Project_Aether_Backend.Models.PlayerProfile", "ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter", b =>
+                {
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.Inventory", "Inventory")
                         .WithOne()
-                        .HasForeignKey("ProjectAether.Objects.Models.GameCharacter", "InventoryId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter", "InventoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ProjectAether.Objects.Models.ArchetypeDefinition", "ArchetypeDefinition")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.ArchetypeDefinition", "ArchetypeDefinition")
                         .WithOne()
-                        .HasForeignKey("ProjectAether.Objects.Models.GameCharacter", "archetypeDefinitionId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.GameCharacter", "archetypeDefinitionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("ArchetypeDefinition");
@@ -1174,20 +1245,20 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("Inventory");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.GameContainer", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.GameContainer", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.Inventory", "Inventory")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.Inventory", "Inventory")
                         .WithOne()
-                        .HasForeignKey("ProjectAether.Objects.Models.GameContainer", "InventoryId")
+                        .HasForeignKey("ProjectAether.Objects.Net._2._1.Standard.Models.GameContainer", "InventoryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Inventory");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.InventoryItem", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.InventoryItem", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.Inventory", "Inventory")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.Inventory", "Inventory")
                         .WithMany("Items")
                         .HasForeignKey("InventoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1196,36 +1267,53 @@ namespace Project_Aether_Backend.Migrations
                     b.Navigation("Inventory");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.PlayerCharacter", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter", b =>
                 {
-                    b.HasOne("ProjectAether.Objects.Models.PlayerProfile", "Player")
+                    b.HasOne("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerProfile", "Player")
                         .WithMany("Characters")
                         .HasForeignKey("PlayerProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Project_Aether_Backend.Models.PlayerProfile", null)
+                        .WithMany("Characters")
+                        .HasForeignKey("PlayerProfileId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Player");
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.ApplicationUser", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.Inventory", b =>
+                {
+                    b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.PlayerProfile", b =>
+                {
+                    b.Navigation("Characters");
+                });
+
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.User", b =>
                 {
                     b.Navigation("Player")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ProjectAether.Objects.Models.Inventory", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("ProjectAether.Objects.Models.PlayerProfile", b =>
-                {
-                    b.Navigation("Characters");
-                });
-
-            modelBuilder.Entity("ProjectAether.Objects.Models.WorldZone", b =>
+            modelBuilder.Entity("ProjectAether.Objects.Net._2._1.Standard.Models.WorldZone", b =>
                 {
                     b.Navigation("GameObjects");
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.ApplicationUser", b =>
+                {
+                    b.Navigation("Player")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Project_Aether_Backend.Models.PlayerProfile", b =>
+                {
+                    b.Navigation("Characters");
                 });
 #pragma warning restore 612, 618
         }

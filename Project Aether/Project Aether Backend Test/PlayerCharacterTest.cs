@@ -6,7 +6,9 @@ using Moq;
 using Moq.EntityFrameworkCore;
 using Project_Aether_Backend.Controllers;
 using Project_Aether_Backend.Data;
-using ProjectAether.Objects.Models;
+using Project_Aether_Backend.Models;
+using Project_Aether_Backend.Shared;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System.Security.Claims;
 
 namespace Project_Aether_Backend_Test
@@ -51,17 +53,19 @@ namespace Project_Aether_Backend_Test
             ApplicationUser user1 = new ApplicationUser { Id = USER1, UserName = TEST_USER_1 };
             ApplicationUser user2 = new ApplicationUser { Id = USER2, UserName = TEST_USER_2 };
 
-            PlayerProfile user1PlayerProfile = new PlayerProfile { Id = 1, UserId = USER1, User = user1, PlayerName = TEST_PLAYER_1 };
-            PlayerProfile user2PlayerProfile = new PlayerProfile { Id = 2, UserId = USER2, User = user2, PlayerName = TEST_PLAYER_2 };
+            Project_Aether_Backend.Models.PlayerProfile user1PlayerProfile = new Project_Aether_Backend.Models.PlayerProfile { Id = 1, ApplicationUserId = USER1, ApplicationUser = user1, PlayerName = TEST_PLAYER_1 };
+            Project_Aether_Backend.Models.PlayerProfile user2PlayerProfile = new Project_Aether_Backend.Models.PlayerProfile { Id = 2, ApplicationUserId = USER2, ApplicationUser = user2, PlayerName = TEST_PLAYER_2 };
 
+            User user1_2_1 = UserMapper.ToSharedUser(user1);
+            User user2_2_1 = UserMapper.ToSharedUser(user2);
 
             // Set up DbContext's DbSet for Players
             var playersData = new List<PlayerCharacter>
             {
-                new PlayerCharacter { Id = 1, Name = PLAYER_CHARACTER_1_1, PlayerProfileId = user1PlayerProfile.Id, Player = user1PlayerProfile },
-                new PlayerCharacter { Id = 2, Name = PLAYER_CHARACTER_2_1, PlayerProfileId = user2PlayerProfile.Id, Player = user2PlayerProfile },
-                new PlayerCharacter { Id = 3, Name = PLAYER_CHARACTER_1_2, PlayerProfileId = user1PlayerProfile.Id, Player = user1PlayerProfile },
-                new PlayerCharacter { Id = 4, Name = PLAYER_CHARACTER_2_2, PlayerProfileId = user2PlayerProfile.Id, Player = user2PlayerProfile },
+                new PlayerCharacter { Id = 1, Name = PLAYER_CHARACTER_1_1, PlayerProfileId = user1PlayerProfile.Id, Player = user1_2_1.Player },
+                new PlayerCharacter { Id = 2, Name = PLAYER_CHARACTER_2_1, PlayerProfileId = user2PlayerProfile.Id, Player = user2_2_1.Player },
+                new PlayerCharacter { Id = 3, Name = PLAYER_CHARACTER_1_2, PlayerProfileId = user1PlayerProfile.Id, Player = user1_2_1.Player },
+                new PlayerCharacter { Id = 4, Name = PLAYER_CHARACTER_2_2, PlayerProfileId = user2PlayerProfile.Id, Player = user2_2_1.Player },
             }.AsQueryable();
 
             //var mockPlayersDbSet = new Mock<DbSet<PlayerCharacter>>();

@@ -248,7 +248,7 @@ public class BackendServiceManager : MonoBehaviour
             // 3. Registering this world (and its IP/Port) in its own database/world directory
             // 4. Returning the server's IP and Port to this client
 
-            var request = UnityWebRequest.Post(worldApiUrl + "/create", "{}");
+            var request = UnityWebRequest.PostWwwForm(worldApiUrl + "/create", "{}");
             request.SetRequestHeader("Content-Type", "application/json");
             request.SetRequestHeader("Authorization", "Bearer " + _playerAuthToken); // Pass your auth token
             await request.SendWebRequest();

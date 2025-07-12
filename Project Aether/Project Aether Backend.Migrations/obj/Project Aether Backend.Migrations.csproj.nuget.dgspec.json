@@ -115,8 +115,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\ProjectAether.Objects.csproj": {
-                "projectPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\ProjectAether.Objects.csproj"
+              "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\ProjectAether.Objects.Net.2.1.Standard.csproj": {
+                "projectPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\ProjectAether.Objects.Net.2.1.Standard.csproj"
               }
             }
           }
@@ -197,14 +197,14 @@
         }
       }
     },
-    "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\ProjectAether.Objects.csproj": {
+    "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\ProjectAether.Objects.Net.2.1.Standard.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\ProjectAether.Objects.csproj",
-        "projectName": "ProjectAether.Objects",
-        "projectPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\ProjectAether.Objects.csproj",
+        "projectUniqueName": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\ProjectAether.Objects.Net.2.1.Standard.csproj",
+        "projectName": "ProjectAether.Objects.Net.2.1.Standard",
+        "projectPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\ProjectAether.Objects.Net.2.1.Standard.csproj",
         "packagesPath": "C:\\Users\\Jack\\.nuget\\packages\\",
-        "outputPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects\\obj\\",
+        "outputPath": "F:\\Backup\\Documents\\Unity Projects\\Project_Aether\\Project Aether\\ProjectAether.Objects.Net.2.1.Standard\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "F:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -215,7 +215,7 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net8.0"
+          "netstandard2.1"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
@@ -223,8 +223,8 @@
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
+          "netstandard2.1": {
+            "targetAlias": "netstandard2.1",
             "projectReferences": {}
           }
         },
@@ -241,12 +241,16 @@
         "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
+        "netstandard2.1": {
+          "targetAlias": "netstandard2.1",
           "dependencies": {
-            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+            "System.ComponentModel.Annotations": {
               "target": "Package",
-              "version": "[8.0.17, )"
+              "version": "[5.0.0, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[9.0.7, )"
             }
           },
           "imports": [
@@ -261,11 +265,11 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.NETCore.App": {
+            "NETStandard.Library": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
