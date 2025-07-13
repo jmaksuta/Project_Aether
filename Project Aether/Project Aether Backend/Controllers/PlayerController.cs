@@ -18,20 +18,14 @@ namespace Project_Aether_Backend.Controllers
         public async Task<IActionResult> GetPlayerProfile()
         {
             var profile = await _context.PlayerProfiles
-                .Include(p => p.Characters) // Include inventory items   
-                .FirstOrDefaultAsync(p => p.ApplicationUserId == this.UserId);
+                .Include(p => p.Characters) // Include Player Characters
+                .FirstOrDefaultAsync(p => p.UserId == this.UserId);
 
             if (profile == null)
             {
                 // If no profile exists, create a default one
-                var newProfile = new Models.PlayerProfile
-                {
-                    ApplicationUserId = this.UserId,
-                    PlayerName = this.UserName, // Use username as default display name
-                    Characters = new List<PlayerCharacter>()
-                };
-                _context.PlayerProfiles.Add(newProfile);
-                await _context.SaveChangesAsync();
+                var newProfile = await createNewPlayerProfile();
+
                 return Ok(newProfile);
             }
             return Ok(profile);
@@ -41,13 +35,14 @@ namespace Project_Aether_Backend.Controllers
         [HttpPost("profile")]
         public async Task<IActionResult> UpdatePlayerProfile([FromBody] PlayerProfileUpdateDto model)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Get UserId from JWT Token
-
             var profile = await _context.PlayerProfiles
-                .FirstOrDefaultAsync(p => p.ApplicationUserId == userId);
+                .Include(p => p.User) // Include ApplicationUser for profile updates
+                .FirstOrDefaultAsync(p => p.UserId == this.UserId);
             if (profile == null)
             {
-                return NotFound(new { Message = "Player profile not found." });
+                var newProfile = await createNewPlayerProfile();
+                
+                return Ok(new { Message = "Player profile created successfully." });
             }
             profile.PlayerName = model.PlayerName ?? profile.PlayerName;
             // Only allow specific updates from client, e.g., cosmetic changes, not stats directly 
@@ -58,6 +53,23 @@ namespace Project_Aether_Backend.Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "Player profile updated successfully." });
+        }
+
+        private async Task<PlayerProfile> createNewPlayerProfile()
+        {
+            // Create new PlayerProfile
+            PlayerProfile playerProfile = new PlayerProfile
+            {
+                UserId = this.UserId,
+                User = new User(),
+                PlayerName = this.UserName, // Use username as default display name
+                Characters = new List<PlayerCharacter>()
+            };
+
+            await _context.PlayerProfiles.AddAsync(playerProfile);
+            await _context.SaveChangesAsync();
+
+            return playerProfile;
         }
 
         // --- DTOs (Data Transfer Objects) ---

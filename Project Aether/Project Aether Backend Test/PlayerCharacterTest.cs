@@ -43,7 +43,7 @@ namespace Project_Aether_Backend_Test
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Use a unique name for each test run
                 .Options;
-            
+
             // Pass the options to the Mock constructor
             _mockContext = new Mock<ApplicationDbContext>(options); // <--- CHANGE IS HERE
 
@@ -53,11 +53,11 @@ namespace Project_Aether_Backend_Test
             ApplicationUser user1 = new ApplicationUser { Id = USER1, UserName = TEST_USER_1 };
             ApplicationUser user2 = new ApplicationUser { Id = USER2, UserName = TEST_USER_2 };
 
-            Project_Aether_Backend.Models.PlayerProfile user1PlayerProfile = new Project_Aether_Backend.Models.PlayerProfile { Id = 1, ApplicationUserId = USER1, ApplicationUser = user1, PlayerName = TEST_PLAYER_1 };
-            Project_Aether_Backend.Models.PlayerProfile user2PlayerProfile = new Project_Aether_Backend.Models.PlayerProfile { Id = 2, ApplicationUserId = USER2, ApplicationUser = user2, PlayerName = TEST_PLAYER_2 };
-
             User user1_2_1 = UserMapper.ToSharedUser(user1);
             User user2_2_1 = UserMapper.ToSharedUser(user2);
+
+            PlayerProfile user1PlayerProfile = new PlayerProfile { Id = 1, UserId = USER1, User = user1_2_1, PlayerName = TEST_PLAYER_1 };
+            PlayerProfile user2PlayerProfile = new PlayerProfile { Id = 2, UserId = USER2, User = user2_2_1, PlayerName = TEST_PLAYER_2 };
 
             // Set up DbContext's DbSet for Players
             var playersData = new List<PlayerCharacter>
@@ -128,13 +128,13 @@ namespace Project_Aether_Backend_Test
             Assert.That(okResult, Is.Not.Null);
             Assert.That(okResult.StatusCode, Is.EqualTo(200));
 
-            var players = okResult.Value as List<PlayerCharacter>;
-            var playerChar1 = (players != null) ? players[0] : new PlayerCharacter() as PlayerCharacter;
+            var players = okResult.Value as List<ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter>;
+            var playerChar1 = (players != null) ? players[0] : new ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter() as ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter;
             Assert.That(playerChar1, Is.Not.Null);
             Assert.That(playerChar1.Player.User.Id, Is.EqualTo(USER1));
             Assert.That(playerChar1.Name, Is.EqualTo(PLAYER_CHARACTER_1_1));
 
-            var playerChar2 = (players != null) ? players[1] : new PlayerCharacter() as PlayerCharacter;
+            var playerChar2 = (players != null) ? players[1] : new ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter() as ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter;
             Assert.That(playerChar2, Is.Not.Null);
             Assert.That(playerChar2.Player.User.Id, Is.EqualTo(USER1));
             Assert.That(playerChar2.Name, Is.EqualTo(PLAYER_CHARACTER_1_2));
@@ -168,7 +168,7 @@ namespace Project_Aether_Backend_Test
             Assert.That(okResult, Is.Not.Null);
             Assert.That(okResult.StatusCode, Is.EqualTo(200));
 
-            var player = okResult.Value as PlayerCharacter;
+            var player = okResult.Value as ProjectAether.Objects.Net._2._1.Standard.Models.PlayerCharacter;
             Assert.That(player, Is.Not.Null);
             Assert.That(player.Player.User.Id, Is.EqualTo(USER1));
             Assert.That(player.Name, Is.EqualTo(PLAYER_CHARACTER_1_1));

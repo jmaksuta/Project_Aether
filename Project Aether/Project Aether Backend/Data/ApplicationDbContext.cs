@@ -30,7 +30,7 @@ namespace Project_Aether_Backend.Data
         public DbSet<NonPlayerCharacter> NonPlayerCharacters { get; set; }
 
         // DbSet for player profiles (beyond basic identity)
-        public DbSet<Models.PlayerProfile> PlayerProfiles { get; set; }
+        public virtual DbSet<PlayerProfile> PlayerProfiles { get; set; }
         // ApplicationUser is handled by IdentityDbContext
 
         public DbSet<WorldZone> WorldZones { get; set; }
@@ -119,13 +119,29 @@ namespace Project_Aether_Backend.Data
                 .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of PlayerProfile if it has characters
 
             // --- PlayerProfile and ApplicationUser (One-to-One) ---
-            builder.Entity<Models.PlayerProfile>()
-                .HasOne(pp => pp.ApplicationUser)
-                .WithOne(au => au.Player) // An User has one PlayerProfile
-                .HasForeignKey<Models.PlayerProfile>(pp => pp.ApplicationUserId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.Cascade); // Cascade delete PlayerProfile when User is deleted
+            //builder.Entity<PlayerProfile>()
+            //    .HasOne(pp => pp.User)
+            //    .WithOne(au => au.Player) // An User has one PlayerProfile
+            //    .HasForeignKey<PlayerProfile>(pp => pp.UserId)
+            //    .IsRequired()
+            //    .OnDelete(DeleteBehavior.Cascade); // Cascade delete PlayerProfile when User is deleted
 
+            builder.Entity<ApplicationUser>()
+               .HasOne<PlayerProfile>() // ApplicationUser has one PlayerProfile
+               .WithOne() // PlayerProfile has one ApplicationUser (no nav prop on PlayerProfile for ApplicationUser)
+                          // If PlayerProfile had a nav prop like 'public ApplicationUser ApplicationUser { get; set; }'
+                          // then it would be .WithOne(pp => pp.ApplicationUser)
+               .HasForeignKey<PlayerProfile>(pp => pp.UserId) // PlayerProfile.UserId is the FK to ApplicationUser.Id
+               .IsRequired() // Every PlayerProfile must have an associated ApplicationUser
+               .OnDelete(DeleteBehavior.Cascade);
+
+            // ignore the User navigation property in PlayerProfile
+            builder.Entity<PlayerProfile>()
+                .Ignore(pp => pp.User);
+
+            // ignore the Player navigation property in User
+            builder.Entity<User>()
+               .Ignore(u => u.Player);
 
             //builder.Entity<ApplicationUser>(entity =>
             //{
@@ -172,16 +188,24 @@ namespace Project_Aether_Backend.Data
 
             // --- OnlinConnection and ApplicationUser (One-to-One) ---
             builder.Entity<OnlineConnection>()
-                .HasOne(oc => oc.User)
+                .HasOne<ApplicationUser>()
                 .WithOne()
                 .HasForeignKey<OnlineConnection>(oc => oc.UserId);
 
+            builder.Entity<OnlineConnection>()
+                .Ignore(pp => pp.User);
+
+
             // --- StoreTransaction and ApplicationUser (Many-to-One) ---
             builder.Entity<StoreTransaction>()
-                .HasOne(st => st.User)
+                .HasOne<ApplicationUser>()
                 .WithMany()
                 .HasForeignKey(st => st.UserId)
                 .OnDelete(DeleteBehavior.Restrict); // Prevent deletion of ApplicationUser if they have transactions
+
+            builder.Entity<StoreTransaction>()
+                .Ignore(pp => pp.User);
+
 
             // --- StoreTransaction and StoreTransactionItem (One-to-Many) ---
             builder.Entity<StoreTransactionItem>()
@@ -242,7 +266,7 @@ namespace Project_Aether_Backend.Data
                 .Property(ii => ii.ItemType)
                 .HasMaxLength(50);
 
-            builder.Entity<Models.PlayerProfile>()
+            builder.Entity<PlayerProfile>()
                 .Property(pp => pp.PlayerName)
                 .IsRequired()
                 .HasMaxLength(100);
@@ -283,7 +307,7 @@ namespace Project_Aether_Backend.Data
                                           // Or .HasConversion<int>(); // Store enum as integer (default)
 
             // Configure Identity specific tables if needed, e.g., max lengths for User fields
-            builder.Entity<User>()
+            builder.Entity<ApplicationUser>()
                 .Property(u => u.DateRegistered)
                 .HasDefaultValueSql("GETDATE()"); // Example for SQL Server
 

@@ -45,6 +45,16 @@ namespace ProjectAether.Objects.Net._2._1.Standard.Models
         public int WorldZoneId { get; set; }
 
         /// <summary>
+        /// The name of the prefab.
+        /// </summary>
+        public string PrefabName { get; set; }
+
+        /// <summary>
+        /// The data for configuration of the prefab.
+        /// </summary>
+        public string PrefabConfigData { get; set; }
+
+        /// <summary>
         /// Navigation property to the WorldZone where this object is located.
         /// </summary>
         [JsonIgnore]

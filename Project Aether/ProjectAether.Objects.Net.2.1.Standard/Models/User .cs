@@ -11,5 +11,6 @@ namespace ProjectAether.Objects.Net._2._1.Standard.Models
         public DateTime DateRegistered { get; set; }
         
         public PlayerProfile Player { get; set; }
+
     }
 }

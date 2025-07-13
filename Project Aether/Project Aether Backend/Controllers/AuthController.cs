@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Project_Aether_Backend.Data;
 using Project_Aether_Backend.Models;
 using Project_Aether_Backend.Shared;
 using ProjectAether.Objects.Net._2._1.Standard.Models;

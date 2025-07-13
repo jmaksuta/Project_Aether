@@ -4,8 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Project_Aether_Backend.Data;
+using Project_Aether_Backend.Filters;
 using Project_Aether_Backend.Hubs;
 using Project_Aether_Backend.Models;
+using Project_Aether_Backend.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args); //WebApplication.CreateSlimBuilder(args);
@@ -98,8 +100,18 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer sceme. Example: \"Authorization:Bearer (token)\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer"
+    });
+
+    // --- ADD THE API KEY SECURITY DEFINITION ---
+    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+    {
+        Description = "API Key must appear in header named 'X-API-Key'",
+        Type = SecuritySchemeType.ApiKey,
+        Name = "X-API-Key", // This matches the header name your ApiKeyAuthFilter expects
+        In = ParameterLocation.Header,
+        // No 'Scheme' needed for a custom API Key header type
     });
 
     // Define security requirements
@@ -118,11 +130,56 @@ builder.Services.AddSwaggerGen(c =>
                 In = ParameterLocation.Header,
             },
             new List<string>()
+        },
+        // Requirement for API Key (for endpoints requiring it)
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "ApiKey" // This ID must match the name used in AddSecurityDefinition("ApiKey", ...)
+                },
+                In = ParameterLocation.Header
+            },
+            new List<string>()
         }
 
     });
 
 });
+
+// Add swagger ui support for API Key authentication
+//builder.Services.AddSwaggerGen(c =>
+//{
+//    c.SwaggerDoc("v2", new OpenApiInfo { Title = "Project Aether API", Version = "v2" });
+
+//    // Add API Key security definition to Swagger
+//    c.AddSecurityDefinition("ApiKey", new OpenApiSecurityScheme
+//    {
+//        Description = "API Key must appear in header",
+//        Type = SecuritySchemeType.ApiKey,
+//        Name = "X-API-Key", // This matches our ApiKeyHeaderName
+//        In = ParameterLocation.Header,
+//        Scheme = "ApiKeyScheme"
+//    });
+
+//    var key = new OpenApiSecurityScheme()
+//    {
+//        Reference = new OpenApiReference
+//        {
+//            Type = ReferenceType.SecurityScheme,
+//            Id = "ApiKey"
+//        },
+//        In = ParameterLocation.Header
+//    };
+//    var requirement = new OpenApiSecurityRequirement
+//    {
+//        { key, new List<string>() }
+//    };
+//    c.AddSecurityRequirement(requirement);
+//});
+
 
 // In the services section (before builder.Build()):
 builder.Services.AddSignalR();
@@ -132,6 +189,10 @@ builder.Services.AddSignalR();
 //{
 //    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
 //});
+
+// Register your API Key services
+builder.Services.AddTransient<IApiKeyValidator, ApiKeyValidator>();
+builder.Services.AddScoped<ApiKeyAuthFilter>(); // Scoped is good for request-based filters
 
 var app = builder.Build();
 

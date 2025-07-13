@@ -348,13 +348,5 @@ F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether 
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.pdb
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\Project Aether Backend.Migrations.genruntimeconfig.cache
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\obj\Debug\net8.0\ref\Project Aether Backend.Migrations.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\EntityFramework.SqlServer.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\EntityFramework.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\System.Data.SqlClient.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\runtimes\win-arm64\native\sni.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\runtimes\win-x64\native\sni.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\runtimes\win-x86\native\sni.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
-F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\ProjectAether.Objects.Net.2.1.Standard.dll
 F:\Backup\Documents\Unity Projects\Project_Aether\Project Aether\Project Aether Backend.Migrations\bin\Debug\net8.0\ProjectAether.Objects.Net.2.1.Standard.pdb
