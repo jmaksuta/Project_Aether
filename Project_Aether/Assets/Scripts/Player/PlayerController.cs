@@ -94,12 +94,19 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleMovement()
     {
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        move = transform.TransformDirection(move) * moveSpeed * Time.deltaTime;
-        characterController.Move(move);
+        try
+        {
+            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            move = transform.TransformDirection(move) * moveSpeed * Time.deltaTime;
+            characterController.Move(move);
 
-        float rotation = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
-        transform.Rotate(0, rotation, 0);
+            float rotation = Input.GetAxis("Mouse X") * rotationSpeed * Time.deltaTime;
+            transform.Rotate(0, rotation, 0);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError($"Error in HandleMovement: {ex.Message}");
+        }
     }
 
     private void HandleInteraction()

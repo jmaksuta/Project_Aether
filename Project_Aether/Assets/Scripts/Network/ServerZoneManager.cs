@@ -72,20 +72,18 @@ public class ServerZoneManager : NetworkBehaviour
             if (!SceneManager.GetSceneByName(sceneName).isLoaded)
             {
                 Debug.Log($"Server: Additively loading zone scene: {sceneName}");
-                // TODO: Fix this.
-                //yield return NetworkManager.Singleton.SceneManager.LoadScene(sceneName,
-                //    LoadSceneMode.Additive).AsIEnumerator();
-                NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+                
+                yield return NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
 
                 Debug.Log($"Server: Finished loading {sceneName}.");
 
-                // After a scene is loaded on the server, load its persistent data from your Backend.
-                LoadZonePersistentData(sceneName);
+                //// After a scene is loaded on the server, load its persistent data from your Backend.
+                //LoadZonePersistentData(sceneName);
             }
         }
         Debug.Log("Server: All zone scenes loaded.");
         // TODO: fix this. added return null; to avoid compiler error
-        return null;
+        yield return null;
     }
 
     private void EnsureConfigLoader()
@@ -241,17 +239,43 @@ public class ServerZoneManager : NetworkBehaviour
     // --- Scene Load Completion & Visibility Management ---
     private void OnServerSceneLoadComplete(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
     {
+        //if (!IsServer) return; // This callback is also triggered on client for IsHost case
+        //if (loadSceneMode == LoadSceneMode.Single && sceneName == GameConstants.PERSISTENT_SCENE_NAME)
+        //{
+        //    Debug.Log($"Server: Client {clientId} finished loading PersistentScene.");
+        //    return;
+        //}
+        //if (allZoneSceneNames.Contains(sceneName))
+        //{
+        //    Debug.Log($"Server: Client {clientId} completed loading zone scene {sceneName}. Updating visibility.");
+        //    StartCoroutine(UpdateVisibilityForClientAfterLoad(clientId, sceneName));
+        //}
+        //--------------------------------------------
         if (!IsServer) return; // This callback is also triggered on client for IsHost case
-        if (loadSceneMode == LoadSceneMode.Single && sceneName == GameConstants.PERSISTENT_SCENE_NAME)
+
+        // If the PersistentScene just loaded for the server (initial load)
+        if (loadSceneMode == LoadSceneMode.Additive && sceneName == GameConstants.PERSISTENT_SCENE_NAME)
         {
-            Debug.Log($"Server: Client {clientId} finished loading PersistentScene.");
+            Debug.Log($"Server: PersistentScene loaded additively for server.");
+            // No specific action needed here beyond what LoadAllZoneScenesRoutine handles
             return;
         }
+
+        // If a zone scene just loaded (either initially or for a client transition)
         if (allZoneSceneNames.Contains(sceneName))
         {
-            Debug.Log($"Server: Client {clientId} completed loading zone scene {sceneName}. Updating visibility.");
+            Debug.Log($"Server: Scene {sceneName} completed loading for client {clientId} (or server itself).");
+            // Only load persistent data if it's the server loading the scene initially or for a client.
+            // Ensure this doesn't double-load if already loaded by LoadAllZoneScenesRoutine.
+            // A simple check is if the scene is already valid and loaded for the server.
+            if (SceneManager.GetSceneByName(sceneName).isLoaded && SceneManager.GetSceneByName(sceneName).IsValid())
+            {
+                // This is the correct place to load persistent data for the zone
+                LoadZonePersistentData(sceneName);
+            }
             StartCoroutine(UpdateVisibilityForClientAfterLoad(clientId, sceneName));
         }
+
     }
 
     private IEnumerator UpdateVisibilityForClientAfterLoad(ulong clientId, string loadedSceneName)
