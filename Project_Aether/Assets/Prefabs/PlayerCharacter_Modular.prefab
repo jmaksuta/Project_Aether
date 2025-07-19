@@ -250,11 +250,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5811505661382451635}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18bf7ccfeb9f9a14bb566c7d4cd3b2af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  moveSpeed: 5
+  rotationSpeed: 100
+  characterController: {fileID: 0}
+  zoneTransitionCoillider: {fileID: 0}
+  targetZoneOnTrigger: 
+  spawnPointInTargetZone: {x: 0, y: 0, z: 0}
+  interactionRange: 3
+  cameraFollowPoint: {fileID: 0}
 --- !u!1 &6251390619477914575
 GameObject:
   m_ObjectHideFlags: 0
