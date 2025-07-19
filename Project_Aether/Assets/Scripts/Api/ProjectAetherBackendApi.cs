@@ -1,10 +1,16 @@
 using Assets.Scripts;
 using Assets.Scripts.Api;
+using Assets.Scripts.Models;
 using ProjectAether.Objects.Net._2._1.Standard.Models;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using System.Xml.Linq;
+using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -211,6 +217,100 @@ public class ProjectAetherBackendApi
     internal static Task<List<ArchetypeDefinition>> GetAvailableClasses()
     {
         throw new NotImplementedException();
+    }
+
+    public static async Task<WorldZone> GetWorldZoneBySceneName(string apiKey, string sceneName)
+    {
+        string worldZoneUrl = ApiSettings.GetApiUrl(ApiSettings.ApiDomains.WorldZone);
+
+        // i.e.: /api/WorldZone/ByName?sceneName=05_ForestZone
+        var request = UnityWebRequest.Get($"{worldZoneUrl}ByName?sceneName={sceneName}");
+        // You might need to add an API key or internal server token for authorization
+        request.SetRequestHeader("X-API-KEY", apiKey);
+        await request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"Failed to load persistent data for {sceneName}: {request.error} - {request.downloadHandler.text}");
+            return null;
+        }
+
+        // Assuming your backend returns a JSON list of InteractableObjectData
+        // You'll need to define InteractableObjectData and a wrapper class if your API returns an array directly
+        // TODO: add this for real game.
+        // Example: var loadedObjects = JsonUtility.FromJson<InteractableObjectDataListWrapper>(jsonResponse).objects;
+        string jsonResponse = request.downloadHandler.text;
+        Debug.Log($"Loaded data for {sceneName}: {jsonResponse}"); // For debugging
+
+        WorldZoneDTO worldZoneDto = JsonUtility.FromJson<WorldZoneDTO>(jsonResponse);
+        WorldZone worldZone = worldZoneDto.ToWorldZone();
+
+        return worldZone;
+    }
+
+    public class WorldZoneDTO
+    {
+        public int id;
+        public string name;
+        public string description;
+        public int zoneId;
+        public string sceneName;
+        public string serverIPAddress;
+        public int serverPort;
+
+        public WorldZone ToWorldZone()
+        {
+            return new WorldZone
+            {
+                Id = this.id,
+                Name = this.name,
+                Description = this.description,
+                ZoneId = this.zoneId,
+                SceneName = this.sceneName,
+                ServerIPAddress = this.serverIPAddress,
+                ServerPort = this.serverPort
+            };
+        }
+    }
+
+    public static async Task<List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject>> GetGameObjectsInWorldZone(string apiKey, WorldZone worldZone)
+    {
+        if (worldZone == null)
+        {
+            Debug.LogError("WorldZone is null. Cannot load game objects.");
+            return null;
+        }
+        // GET api/WorldZone/Objects/ByZone/{Id}
+        string zoneObjectsUrl = ApiSettings.GetApiUrl(ApiSettings.ApiDomains.WorldZone) + $"Objects/ByZone/{worldZone.Id}";
+
+        var request = UnityWebRequest.Get(zoneObjectsUrl);
+        // You might need to add an API key or internal server token for authorization
+        request.SetRequestHeader("X-API-KEY", apiKey);
+        await request.SendWebRequest();
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError($"Failed to load objects for zone {worldZone.Id}: {request.error} - {request.downloadHandler.text}");
+            return null;
+        }
+        string jsonResponse = request.downloadHandler.text;
+        Debug.Log($"Loaded game objects for worldZone Id: {worldZone.Id}: {jsonResponse}");
+
+        return DeserializeGameObjectList(jsonResponse);
+    }
+
+    private static List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> DeserializeGameObjectList(string jsonResponse)
+    {
+        List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> result = new List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject>();   
+        try
+        {
+            result = JsonSerializer.Deserialize<List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject>>(jsonResponse);
+            
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"JSON Deserialization Error: {e.Message}");
+        }
+        return result;
     }
 
 }

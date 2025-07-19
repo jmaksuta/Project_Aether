@@ -50,6 +50,9 @@ public class NetworkManagerSetup : MonoBehaviour
         }
 
         // NO Unity Services initialization here. All handled by your custom backend.
+#if UNITY_SERVER
+        isDedicatedServer = true;
+#endif
 
         if (isDedicatedServer)
         {
@@ -74,12 +77,21 @@ public class NetworkManagerSetup : MonoBehaviour
             ushort currentPort = _serverPort;
 
             Debug.Log($"Server: Configuring connection data to IP: {currentIp}, Port: {currentPort}");
-            NetworkManager.Singleton.GetComponent<UnityTransport>()
-                .SetConnectionData(currentIp, currentPort);
+            UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
+            if (transport != null)
+            {
+                transport.SetConnectionData(currentIp, currentPort);    
+            }
+            else
+            {
+                Debug.LogError("Server: UnityTransport component not found on NetworkManager. Cannot set connection data.");
+                return;
+            }
 
             // Start the NetworkManager as a server
-            NetworkManager.Singleton.StartServer();
-            Debug.Log("Server: NetworkManager started as server.");
+            StartCoroutine(StartServerAfterDelay());
+            //NetworkManager.Singleton.StartServer();
+            Debug.Log("Server: NetworkManager attempted start as server.");
 
             // Load the PersistentScene additively for the server.
             // ServerZoneManager will then load all other necessary zones by querying your backend.
@@ -167,6 +179,19 @@ public class NetworkManagerSetup : MonoBehaviour
         }
         SceneManager.SetActiveScene(SceneManager.GetSceneByName(GameConstants.MAIN_MENU_SCENE_NAME));
         Debug.Log("Bootstrap: Main Menu Scene loaded and active.");
+    }
+
+    IEnumerator StartServerAfterDelay()
+    {
+        //yield return null; // Wait one frame
+        // Or
+        yield return new WaitForEndOfFrame();
+
+        if (NetworkManager.Singleton != null && !NetworkManager.Singleton.IsListening)
+        {
+            NetworkManager.Singleton.StartServer();
+            Debug.Log("Server Started!");
+        }
     }
 
 }

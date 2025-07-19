@@ -19,7 +19,7 @@ public class InteractableObject : NetworkBehaviour
 
     // A unique ID for this object instance in the world (e.g., GUID or scene-specific ID)
     [SerializeField]
-    private string uniqueID; // Set this in Editor for each instance
+    public string uniqueID; // Set this in Editor for each instance
 
     private NetworkVariable<Color> currentColor = new NetworkVariable<Color>();
     private NetworkVariable<bool> isInteracted = new NetworkVariable<bool>();
@@ -84,6 +84,17 @@ public class InteractableObject : NetworkBehaviour
         {
             currentColor.Value = data.Color;
             isInteracted.Value = data.Interacted;
+            // Apply other data as needed
+        }
+    }
+
+    public void ApplyStateFromData(ProjectAether.Objects.Net._2._1.Standard.Models.GameObject gameObject)
+    {
+        if (IsServer) // Only server should apply the canonical state
+        {
+            this.gameObject.transform.position = new Vector3(gameObject.xPosition, gameObject.yPosition, gameObject.zPosition);
+            //currentColor.Value = data.Color;
+            //isInteracted.Value = data.Interacted;
             // Apply other data as needed
         }
     }

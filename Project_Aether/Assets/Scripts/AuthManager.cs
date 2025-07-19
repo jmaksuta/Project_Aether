@@ -1,6 +1,4 @@
-using UnityEditorInternal;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class AuthManager : MonoBehaviour
 {

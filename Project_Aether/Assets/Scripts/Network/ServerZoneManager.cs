@@ -6,9 +6,16 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using Assets.Scripts.Models;
+using Assets.Scripts;
+using static ProjectAetherBackendApi;
+using ProjectAether.Objects.Net._2._1.Standard.Models;
+using System.Linq;
 
 public class ServerZoneManager : NetworkBehaviour
 {
+    [SerializeField]
+    public ConfigLoader configLoader; // Reference to ConfigLoader to get API Key
+
     public static ServerZoneManager Instance { get; private set; }
 
     [Header("Zone Scenes")]
@@ -18,8 +25,8 @@ public class ServerZoneManager : NetworkBehaviour
     private Dictionary<ulong, string> clientCurrentZone = new Dictionary<ulong, string>();
 
     // Backend API URL for world persistence
-    [SerializeField] 
-    private string worldPersistenceApiUrl = "https://api.yourgame.com/worldpersistence";
+    [SerializeField]
+    private string worldPersistenceApiUrl = ApiSettings.GetApiUrl(ApiSettings.ApiDomains.WorldZone);// "https://api.yourgame.com/worldpersistence";
 
     private void Awake()
     {
@@ -68,6 +75,8 @@ public class ServerZoneManager : NetworkBehaviour
                 // TODO: Fix this.
                 //yield return NetworkManager.Singleton.SceneManager.LoadScene(sceneName,
                 //    LoadSceneMode.Additive).AsIEnumerator();
+                NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
+
                 Debug.Log($"Server: Finished loading {sceneName}.");
 
                 // After a scene is loaded on the server, load its persistent data from your Backend.
@@ -79,55 +88,123 @@ public class ServerZoneManager : NetworkBehaviour
         return null;
     }
 
+    private void EnsureConfigLoader()
+    {
+        if (configLoader == null)
+        {
+            configLoader = this.GetComponent<ConfigLoader>();
+            if (configLoader == null)
+            {
+                // Try to find ConfigLoader in parent hierarchy
+                configLoader = this.GetComponentInParent<ConfigLoader>();
+            }
+            if (configLoader == null)
+            {
+                // Try to find ConfigLoader in the scene
+                configLoader = FindObjectOfType<ConfigLoader>();
+            }
+            if (configLoader == null)
+            {
+                Debug.LogError("ConfigLoader component not found! Please ensure it is present in the scene or attached to this GameObject.");
+                return;
+            }
+        }
+    }
+
     // --- World Persistence: Load Data from ASP.NET Core API ---
     private async void LoadZonePersistentData(string sceneName)
     {
         Debug.Log($"Server: Loading persistent data for zone: {sceneName} from backend.");
         try
         {
+            EnsureConfigLoader();
+            string apiKey = configLoader.GetApiKey();
             // Make an HTTP GET request to your ASP.NET Core API for this zone's data
-            var request = UnityWebRequest.Get($"{worldPersistenceApiUrl}/zones/{sceneName}");
-            // You might need to add an API key or internal server token for authorization
-            // request.SetRequestHeader("X-API-KEY", "YOUR_INTERNAL_SERVER_API_KEY"); // Example for server-to-server auth
-            await request.SendWebRequest();
+            WorldZone worldZone = await ProjectAetherBackendApi.GetWorldZoneBySceneName(apiKey, sceneName);
 
-            if (request.result != UnityWebRequest.Result.Success)
+            List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> loadedGameObjects = await ProjectAetherBackendApi.GetGameObjectsInWorldZone(apiKey, worldZone);
+
+            if (loadedGameObjects == null || loadedGameObjects.Count == 0)
             {
-                Debug.LogError($"Failed to load persistent data for {sceneName}: {request.error} - {request.downloadHandler.text}");
+                Debug.LogWarning($"No persistent data found for zone: {sceneName}");
                 return;
             }
-
-            // Assuming your backend returns a JSON list of InteractableObjectData
-            // You'll need to define InteractableObjectData and a wrapper class if your API returns an array directly
-            // TODO: add this for real game.
-            // Example: var loadedObjects = JsonUtility.FromJson<InteractableObjectDataListWrapper>(jsonResponse).objects;
-            string jsonResponse = request.downloadHandler.text;
-            Debug.Log($"Loaded data for {sceneName}: {jsonResponse}"); // For debugging
 
             // Find all InteractableObjects in the newly loaded scene
             Scene loadedScene = SceneManager.GetSceneByName(sceneName);
             if (loadedScene.IsValid())
             {
-                List<InteractableObject> interactables = new List<InteractableObject>();
-                foreach (GameObject rootObj in loadedScene.GetRootGameObjects())
-                {
-                    interactables.AddRange(rootObj.GetComponentsInChildren<InteractableObject>(true));
-                }
+                List<InteractableObject> interactables = GetInteractablesInScene(loadedScene);
 
-                foreach (var interactable in interactables)
-                {
-                    // TODO: add this for real game.
-                    // In a real game, each interactable would have a unique ID that matches backend data
-                    // Find matching data in loadedObjects and apply its state (color, interacted status, position, etc.)
-                    // Example: var data = loadedObjects.FirstOrDefault(o => o.UniqueID == interactable.uniqueID);
-                    // if (data != null) interactable.ApplyStateFromData(data); // You'd need to add ApplyStateFromData to InteractableObject
-                }
+                CreateAndUpdateInteractablesInScene(loadedGameObjects, interactables);
+
+                Debug.Log($"Server: Successfully applied persistent data to {interactables.Count} interactable objects in {sceneName}.");
             }
+
             Debug.Log($"Server: Successfully loaded persistent data for zone: {sceneName}");
         }
         catch (System.Exception e)
         {
             Debug.LogError($"Exception during loading persistent data for {sceneName}: {e.Message}");
+        }
+    }
+
+    private List<InteractableObject> GetInteractablesInScene(Scene loadedScene)
+    {
+        List<InteractableObject> interactables = new List<InteractableObject>();
+        foreach (UnityEngine.GameObject rootObj in loadedScene.GetRootGameObjects())
+        {
+            interactables.AddRange(rootObj.GetComponentsInChildren<InteractableObject>(true));
+        }
+        return interactables;
+    }
+
+    private void CreateAndUpdateInteractablesInScene(List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> loadedGameObjects, List<InteractableObject> interactables)
+    {
+        UpdateInteractablesInScene(loadedGameObjects, interactables);
+        // Create new objects that should exist in scene but do not currently exist.
+        CreateNewObjectsInScene(loadedGameObjects, interactables);
+    }
+
+    private void UpdateInteractablesInScene(List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> loadedGameObjects, List<InteractableObject> interactables)
+    {
+        foreach (var interactable in interactables)
+        {
+            // TODO: add this for real game.
+            // In a real game, each interactable would have a unique ID that matches backend data
+            // Find matching data in loadedObjects and apply its state (color, interacted status, position, etc.)
+            // Example: var data = loadedObjects.FirstOrDefault(o => o.UniqueID == interactable.uniqueID);
+            // if (data != null) interactable.ApplyStateFromData(data); 
+            // You'd need to add ApplyStateFromData to InteractableObject
+
+            var data = loadedGameObjects.FirstOrDefault(go => go.Id.ToString() == interactable.uniqueID);
+            if (data != null)
+            {
+                interactable.ApplyStateFromData(data);
+            }
+        }
+    }
+
+    private void CreateNewObjectsInScene(List<ProjectAether.Objects.Net._2._1.Standard.Models.GameObject> loadedGameObjects, List<InteractableObject> interactables)
+    {
+        foreach (var gameObjectData in loadedGameObjects)
+        {
+            // Check if the object already exists in the scene
+            var existingObject = interactables.FirstOrDefault(i => i.uniqueID == gameObjectData.Id.ToString());
+            if (existingObject == null)
+            {
+                // Create a new InteractableObject instance and apply the data
+                UnityEngine.GameObject newObject = NetworkPrefabManager.Instance.GetNetworkPrefabByName(gameObjectData.PrefabName);
+                Vector3 newObjectPosition = new Vector3(gameObjectData.xPosition, gameObjectData.yPosition, gameObjectData.zPosition);
+                // TODO: add the network rotation here.
+                UnityEngine.GameObject newObj = Instantiate(newObject, newObjectPosition, Quaternion.identity);
+                InteractableObject newInteractable = newObj.GetComponent<InteractableObject>();
+                if (newInteractable != null)
+                {
+                    newInteractable.ApplyStateFromData(gameObjectData);
+                    Debug.Log($"Server: Created new InteractableObject {newInteractable.name} with ID {gameObjectData.Id}");
+                }
+            }
         }
     }
 
@@ -158,7 +235,7 @@ public class ServerZoneManager : NetworkBehaviour
     {
         Debug.Log($"Server: Client {clientId} disconnected. Removing from zone tracking.");
         clientCurrentZone.Remove(clientId);
-        // Save player data to backend here (e.g., position, inventory, etc.)
+        // TODO: Save player data to backend here (e.g., position, inventory, etc.)
     }
 
     // --- Scene Load Completion & Visibility Management ---
@@ -193,7 +270,7 @@ public class ServerZoneManager : NetworkBehaviour
             if (zoneUnityScene.IsValid())
             {
                 List<NetworkObject> objectsInThisZone = new List<NetworkObject>();
-                foreach (GameObject rootObj in zoneUnityScene.GetRootGameObjects())
+                foreach (UnityEngine.GameObject rootObj in zoneUnityScene.GetRootGameObjects())
                 {
                     objectsInThisZone.AddRange(rootObj.GetComponentsInChildren<NetworkObject>(true));
                 }
