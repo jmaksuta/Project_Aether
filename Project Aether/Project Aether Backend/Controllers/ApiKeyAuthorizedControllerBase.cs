@@ -6,11 +6,18 @@ using Project_Aether_Backend.Models;
 
 namespace Project_Aether_Backend.Controllers
 {
+    [ApiController]
     [ServiceFilter(typeof(ApiKeyAuthFilter))] // You can use ServiceFilter directly too
-    public class ApiKeyAuthorizedControllerBase : AuthorizedControllerBase
+    public class ApiKeyAuthorizedControllerBase : ControllerBase
     {
-        public ApiKeyAuthorizedControllerBase(ApplicationDbContext context, UserManager<ApplicationUser> userManager) : base(context, userManager)
+        protected readonly ApplicationDbContext _context;
+        protected readonly UserManager<ApplicationUser> _userManager;
+
+        public ApiKeyAuthorizedControllerBase(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
+            _context = context;
+            _userManager = userManager;
         }
+
     }
 }

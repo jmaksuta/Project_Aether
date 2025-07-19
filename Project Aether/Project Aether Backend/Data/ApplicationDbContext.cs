@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Project_Aether_Backend.Models;
 using ProjectAether.Objects.Net._2._1.Standard.Models;
+using System.Text.Json;
 
 namespace Project_Aether_Backend.Data
 {
@@ -340,6 +341,7 @@ namespace Project_Aether_Backend.Data
         {
             SeedArchetypeData(builder);
             SeedWorldZoneData(builder);
+            SeedGameObjects(builder);
         }
 
         private void SeedArchetypeData(ModelBuilder builder)
@@ -615,6 +617,44 @@ namespace Project_Aether_Backend.Data
                 }
 
 
+                );
+        }
+
+        private void SeedGameObjects(ModelBuilder builder)
+        {
+            //InteractableSphere
+            builder.Entity<GameObject>().HasData(
+                new GameObject
+                {
+                    Id = 1,
+                    Name = "Test Object",
+                    ObjectType = GameObjectType.NonPlayerCharacter,
+                    xPosition = 1f,
+                    yPosition = 1f,
+                    zPosition = 1f,
+                    IsActive = true,
+                    IsDeleted = false,
+                    //ArchetypeDefinitionId = 0, // Set to 0 or null if no specific archetype is assigned
+                    PrefabName = "InteractableSphere",
+                    WorldZoneId = 1, // Assuming this is the Node Forge zone
+                    //WorldZone = new WorldZone
+                    //{
+                    //    Id = 1,
+                    //    Name = "Node Forge",
+                    //    Description = "The character's starting point",
+                    //    ZoneId = 1,
+                    //    SceneName = "04_NodeForge_Intro",
+                    //    ServerIPAddress = "192.168.1.147",
+                    //    ServerPort = 55002, // Set to 0 or null if no specific port is assigned
+                    //},
+                    Description = "This is a test object for interaction.",
+                    PrefabConfigData = JsonSerializer.Serialize(new
+                    {
+                        Color = "Red",
+                        Diameter = 0.25f,
+                        InteractionMessage = "You have interacted with the test sphere."
+                    })
+                }
                 );
         }
 

@@ -88,18 +88,18 @@ namespace Project_Aether_Backend.Migrations
                     table.PrimaryKey("PK_StoreItems", x => x.Id);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    DateRegistered = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
+            //migrationBuilder.CreateTable(
+            //    name: "User",
+            //    columns: table => new
+            //    {
+            //        Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+            //        UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+            //        DateRegistered = table.Column<DateTime>(type: "datetime2", nullable: false)
+            //    },
+            //    constraints: table =>
+            //    {
+            //        table.PrimaryKey("PK_User", x => x.Id);
+            //    });
 
             migrationBuilder.CreateTable(
                 name: "WorldZones",
@@ -597,8 +597,8 @@ namespace Project_Aether_Backend.Migrations
             migrationBuilder.DropTable(
                 name: "StoreTransactionItems");
 
-            migrationBuilder.DropTable(
-                name: "User");
+            //migrationBuilder.DropTable(
+            //    name: "User");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
