@@ -72,7 +72,7 @@ public class ServerZoneManager : NetworkBehaviour
             if (!SceneManager.GetSceneByName(sceneName).isLoaded)
             {
                 Debug.Log($"Server: Additively loading zone scene: {sceneName}");
-                
+
                 yield return NetworkManager.Singleton.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
 
                 Debug.Log($"Server: Finished loading {sceneName}.");
@@ -273,8 +273,78 @@ public class ServerZoneManager : NetworkBehaviour
                 // This is the correct place to load persistent data for the zone
                 LoadZonePersistentData(sceneName);
             }
+            ServerCameraManagement(sceneName);
             StartCoroutine(UpdateVisibilityForClientAfterLoad(clientId, sceneName));
         }
+
+    }
+
+    private void ServerCameraManagement(string sceneName)
+    {
+        // --- Camera Management on Server ---
+        // If the server is running with a display (e.g., for debugging), ensure only the relevant camera is active.
+        // For a truly headless server, this block is irrelevant.
+        if (IsServer) // Ensure this logic only runs on the server instance
+        {
+            // Disable all cameras in all loaded scenes first
+            foreach (string loadedSceneName in allZoneSceneNames)
+            {
+                Scene currentLoadedScene = SceneManager.GetSceneByName(loadedSceneName);
+                if (currentLoadedScene.IsValid() && currentLoadedScene.isLoaded)
+                {
+                    foreach (UnityEngine.GameObject rootObj in currentLoadedScene.GetRootGameObjects())
+                    {
+                        Camera[] camerasInScene = rootObj.GetComponentsInChildren<Camera>(true);
+                        foreach (Camera cam in camerasInScene)
+                        {
+                            if (cam.gameObject.activeInHierarchy) // Only if it's currently active
+                            {
+                                cam.enabled = false;
+                                Debug.Log($"Server: Disabled camera in scene {loadedSceneName}: {cam.name}");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Now, enable the camera in the newly loaded scene (if it's a zone scene)
+            Scene newlyLoadedZoneScene = SceneManager.GetSceneByName(sceneName);
+            if (newlyLoadedZoneScene.IsValid() && newlyLoadedZoneScene.isLoaded)
+            {
+                foreach (UnityEngine.GameObject rootObj in newlyLoadedZoneScene.GetRootGameObjects())
+                {
+                    Camera[] camerasInScene = rootObj.GetComponentsInChildren<Camera>(true);
+                    foreach (Camera cam in camerasInScene)
+                    {
+                        // We assume the zone scene's camera is the one we want active
+                        // You might have a specific tag or name for the "main" camera in each zone
+                        if (!cam.enabled)
+                        {
+                            cam.enabled = true;
+                            Debug.Log($"Server: Enabled camera in scene {sceneName}: {cam.name}");
+                        }
+                    }
+                }
+            }
+            // Also ensure the PersistentScene's camera (if any) is disabled
+            Scene persistentScene = SceneManager.GetSceneByName(GameConstants.PERSISTENT_SCENE_NAME);
+            if (persistentScene.IsValid() && persistentScene.isLoaded)
+            {
+                foreach (UnityEngine.GameObject rootObj in persistentScene.GetRootGameObjects())
+                {
+                    Camera[] camerasInScene = rootObj.GetComponentsInChildren<Camera>(true);
+                    foreach (Camera cam in camerasInScene)
+                    {
+                        if (cam.enabled)
+                        {
+                            cam.enabled = false;
+                            Debug.Log($"Server: Disabled camera in PersistentScene: {cam.name}");
+                        }
+                    }
+                }
+            }
+        }
+        // --- End Camera Management ---
 
     }
 
