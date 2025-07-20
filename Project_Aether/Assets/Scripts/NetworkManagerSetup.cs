@@ -1,6 +1,6 @@
+using Assets.Scripts.Common;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -13,6 +13,8 @@ public class NetworkManagerSetup : MonoBehaviour
     private string _serverIpAddress = GameConstants.GAME_SERVER_IP_ADDRESS;
     private ushort _serverPort = GameConstants.GAME_SERVER_PORT; // Default from GameConstants
 
+    private bool isDedicatedServer = false; // Flag to determine if this is a dedicated server build
+
     async void Awake()
     {
         // Add DontDestroyOnLoad to the NetworkManager_Setup GameObject itself
@@ -24,7 +26,7 @@ public class NetworkManagerSetup : MonoBehaviour
 
         // Check command-line arguments for dedicated server build
         string[] args = Environment.GetCommandLineArgs();
-        bool isDedicatedServer = false;
+        //bool isDedicatedServer = false;
         for (int i = 0; i < args.Length; i++)
         {
             if (args[i] == "-dedicatedServer")
@@ -49,11 +51,23 @@ public class NetworkManagerSetup : MonoBehaviour
             }
         }
 
-        // NO Unity Services initialization here. All handled by your custom backend.
 #if UNITY_SERVER
         isDedicatedServer = true;
 #endif
 
+    }
+
+    // Start is called before the first frame update, and after all Awakes
+    async void Start()
+    {
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnServerStarted += OnNetcodeServerStarted;
+            // For clients, you might want to subscribe to OnClientStarted
+            NetworkManager.Singleton.OnClientStarted += OnNetcodeClientStarted;
+        }
+
+        // NO Unity Services initialization here. All handled by your custom backend.
         if (isDedicatedServer)
         {
             await StartDedicatedServer();
@@ -80,7 +94,7 @@ public class NetworkManagerSetup : MonoBehaviour
             UnityTransport transport = NetworkManager.Singleton.GetComponent<UnityTransport>();
             if (transport != null)
             {
-                transport.SetConnectionData(currentIp, currentPort);    
+                transport.SetConnectionData(currentIp, currentPort);
             }
             else
             {
@@ -99,7 +113,8 @@ public class NetworkManagerSetup : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogError($"Server startup failed: {e.Message}");
+            string message = Common.GetExceptionDetail(e);
+            Debug.LogError($"Server startup failed: {message}");
             Application.Quit(); // Ensure server exits on critical failure
         }
     }
